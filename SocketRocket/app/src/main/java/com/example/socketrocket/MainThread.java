@@ -24,8 +24,7 @@ public class MainThread extends Thread {
 
     @Override
     public void run() {
-        long startTime, waitTime, totalTime = 0;
-        long timeMillis = 1000/MAX_FPS;
+        long startTime, waitTime, timeMillis, totalTime = 0;
         int frameCount = 0;
         long targetTime = 1000/MAX_FPS;
 
@@ -34,6 +33,7 @@ public class MainThread extends Thread {
             canvas = null;
             try {
                 // Render and Tick
+                canvas = this.surfaceHolder.lockCanvas();
                 synchronized (this.surfaceHolder) {
                     this.gamePanel.update();
                     this.gamePanel.draw(canvas);
@@ -64,8 +64,9 @@ public class MainThread extends Thread {
             totalTime += System.nanoTime() - startTime;
             if(frameCount == MAX_FPS) {
                 averageFPS = 1000/((totalTime/frameCount)/1_000_000);
-                frameCount = 0;
                 System.out.println("average fps: " +  averageFPS);
+                frameCount = 0;
+                totalTime = 0;
             }
         }
     }

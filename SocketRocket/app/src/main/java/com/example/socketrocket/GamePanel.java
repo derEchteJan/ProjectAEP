@@ -1,8 +1,8 @@
 package com.example.socketrocket;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -46,15 +46,22 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
+        // TODO: Handle Tap Input here
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            System.out.println("TouchEvent at: " + event.getX() + ", " + event.getY());
+        }
+        return true;
     }
 
     public void update() {
-
+        // TODO: Handle Tick Updates here
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        // Fill Background with color
+        canvas.drawColor(Color.GRAY);
+        // TODO: Handle Rendering here
     }
 }
