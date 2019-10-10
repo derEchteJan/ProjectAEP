@@ -7,13 +7,18 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.socketrocket.game.Game;
+
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     private MainThread mainThread;
+    private Game game;
 
     public GamePanel(Context context) {
         super(context);
         this.getHolder().addCallback(this);
+        this.game = new Game();
+        this.game.init();
         this.mainThread = new MainThread(this.getHolder(), this);
         this.setFocusable(true);
     }
@@ -47,21 +52,21 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // TODO: Handle Tap Input here
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            System.out.println("TouchEvent at: " + event.getX() + ", " + event.getY());
-        }
+        this.game.handleTouchEvent(event);
         return true;
     }
 
     public void update() {
         // TODO: Handle Tick Updates here
+        this.game.tick();
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
         // Fill Background with color
-        canvas.drawColor(Color.GRAY);
+        canvas.drawColor(Color.BLUE);
+        this.game.render(canvas);
         // TODO: Handle Rendering here
     }
 }
