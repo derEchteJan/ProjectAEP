@@ -30,9 +30,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        this.mainThread.setRunning(true);
+        this.mainThread = MainThread.getCopyOf(this.mainThread);
         this.mainThread.start();
+        this.mainThread.setRunning(true);
     }
+
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
@@ -65,8 +67,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         // Fill Background with color
-        canvas.drawColor(Color.BLUE);
+        canvas.drawColor(0xFF404040);
         this.game.render(canvas);
-        // TODO: Handle Rendering here
     }
 }

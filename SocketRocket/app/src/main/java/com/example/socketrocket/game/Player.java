@@ -7,21 +7,26 @@ import android.graphics.Rect;
 
 public class Player extends Entity {
 
-    private long ticks = 0;
+    private String name = "Jeff"; // für später
+    private final double drag = 0.8;
 
-    // MARK: Entity
+
+    // MARK: - Entity
+
     @Override public void tick() {
         super.tick();
-        this.ticks++;
-        if (ticks % 20 == 0) {
-            System.out.println("player: " + (int)this.pX + " " + (int)this.pY + " v: " + (int)this.vX + " " + (int)this.vY);
-        }
+        // apply drag
+        double sum = this.vX > 0 ? this.vX + (this.vY > 0 ? this.vY : -this.vY) : -this.vX + (this.vY > 0 ? this.vY : -this.vY); // muss man nicht verstehen..
+        double dragComponentX = this.vX/sum;
+        double dragComponentY = this.vY/sum;
+        if(this.vX != 0) this.vX -= this.drag * dragComponentX;
+        if(this.vY != 0) this.vY -= this.drag * dragComponentY;
     }
 
     public void render(Canvas canvas) {
         Paint p = new Paint();
         p.setColor(0xFFFFFF);
         p.setAlpha(255);
-        canvas.drawRect(new Rect((int)this.pX - 20, (int)this.pY - 20, (int)this.pX + 20, (int)this.pY + 20), p);
+        canvas.drawCircle((float)this.pX, (float)this.pY, 20, p);
     }
 }

@@ -7,29 +7,54 @@ import android.graphics.Rect;
 public class Camera extends Entity {
 
     private Entity child;
-    private double screenWidth = 1400, screenHeight = 2000;
-    private double followFactor = 0.5;
+    private double screenMidX, screenMidY;
+    private double followFactor;
+    private boolean showFocusPoint;
+
+    public Camera() {
+        super();
+        this.screenMidX = GameConstants.SCREEN_W/2;
+        this.screenMidY = GameConstants.SCREEN_H/2;
+        this.followFactor = 0.5;
+        this.showFocusPoint = GameConstants.DEBUG_MODE;
+    }
+
+
+    // MARK: - External
 
     public void setChild(Entity child) {
         this.child = child;
     }
 
-    public void setScreenDimensions(double w, double h) {
-        this.screenWidth = w; this.screenHeight = h;
-    }
+
+    // MARK: - Display <-> Virtual Coordinate Translation
+
+    // MARK: Virtual to Display
 
     public float translateX(double x) {
-        return (float) (x - this.pX + this.screenWidth / 2);
-    }
-    public float translateY(double y) {
-        return (float) (y - this.pY + this.screenHeight / 2);
+        return (float)(x - this.pX + this.screenMidX);
     }
 
-    public double inverseTranslateX(float screenX) {
-        return (double)(screenX - this.screenWidth/2)+this.pX;
+    public float translateY(double y) {
+        return (float)(y - this.pY + this.screenMidY);
     }
+
+    public void translateCanvas(Canvas c) {
+        c.translate((float)(this.screenMidX - this.pX), (float)(this.screenMidY - this.pY));
+    }
+
+    // MARK: Display to Virtual
+
+    public double inverseTranslateX(float screenX) {
+        return (double)(screenX - this.screenMidX) + this.pX;
+    }
+
     public double inverseTranslateY(float screenY) {
-        return (double)(screenY - this.screenWidth/2)+this.pY;
+        return (double)(screenY - this.screenMidY) + this.pY;
+    }
+
+    public void inverseTranslateCanvas(Canvas c) {
+        c.translate((float)(-this.screenMidX + this.pX), (float)(-this.screenMidY + this.pY));
     }
 
     // MARK: - Entity
@@ -49,14 +74,22 @@ public class Camera extends Entity {
     }
 
     public void render(Canvas canvas) {
-        // Debug only
+        if (!this.showFocusPoint) return;
+        // Show camera position in debug mode
+        int cornerOffset = 40;
+        int lineWidth = 10;
+        int lineLength = 22;
         Paint p = new Paint();
-        p.setColor(0);
-        p.setAlpha(200);
-        canvas.drawRect(new Rect((int)this.pX - 10, (int)this.pY - 10, (int)this.pX + 10, (int)this.pY + 10), p);
-        //canvas.drawLine((float)this.pX - 20, (float)this.pY - 20, (float)this.pX + 20, (float)this.pY + 20, p);
-        // Debug
-        return;
+        p.setColor(0x101010);
+        p.setAlpha(128);
+        canvas.drawRect(new Rect((int)this.pX - cornerOffset, (int)this.pY - cornerOffset, (int)this.pX - cornerOffset + lineLength, (int)this.pY - cornerOffset + lineWidth), p);
+        canvas.drawRect(new Rect((int)this.pX + cornerOffset - lineLength, (int)this.pY - cornerOffset, (int)this.pX + cornerOffset, (int)this.pY - cornerOffset + lineWidth), p);
+        canvas.drawRect(new Rect((int)this.pX - cornerOffset, (int)this.pY + cornerOffset - lineWidth, (int)this.pX - cornerOffset + lineLength, (int)this.pY + cornerOffset), p);
+        canvas.drawRect(new Rect((int)this.pX + cornerOffset - lineLength, (int)this.pY + cornerOffset - lineWidth, (int)this.pX + cornerOffset, (int)this.pY + cornerOffset), p);
+        canvas.drawRect(new Rect((int)this.pX - cornerOffset, (int)this.pY - cornerOffset + lineWidth, (int)this.pX - cornerOffset + lineWidth, (int)this.pY - cornerOffset + lineLength), p);
+        canvas.drawRect(new Rect((int)this.pX - cornerOffset, (int)this.pY + cornerOffset - lineLength, (int)this.pX - cornerOffset + lineWidth, (int)this.pY + cornerOffset - lineWidth), p);
+        canvas.drawRect(new Rect((int)this.pX + cornerOffset - lineWidth, (int)this.pY - cornerOffset + lineWidth, (int)this.pX + cornerOffset, (int)this.pY - cornerOffset + lineLength), p);
+        canvas.drawRect(new Rect((int)this.pX + cornerOffset - lineWidth, (int)this.pY + cornerOffset - lineLength, (int)this.pX + cornerOffset, (int)this.pY + cornerOffset - lineWidth), p);
     }
 
 }
