@@ -9,6 +9,8 @@ import static java.lang.Math.min;
 
 public class EntityHanlder {
 
+    public static boolean tapControllsPlayer = true;
+
     private Camera camera = new Camera();
     private Player player = new Player();
     int xmin = 30, ymin = 30, xmax = 1200, ymax = 1800;
@@ -29,49 +31,63 @@ public class EntityHanlder {
     }
 
     private void checkPlayerBounds() {
+        boolean bounce = Math.random() <= 0.40;
         if (player.pX <= xmin) {
             player.pX = xmin;
-            player.vX = 0;
+            player.vX = bounce ? -player.vX : 0;
         }
         if (player.pY <= ymin) {
             player.pY = ymin;
-            player.vY = 0;
+            player.vY = bounce ? -player.vY : 0;
         }
         if (player.pX >= xmax) {
             player.pX = xmax;
-            player.vX = 0;
+            player.vX = bounce ? -player.vX : 0;
         }
         if (player.pY >= ymax) {
             player.pY = ymax;
-            player.vY = 0;
+            player.vY = bounce ? -player.vY : 0;
         }
     }
 
 
     public void renderEntities(Canvas c) {
-        c.translate((float) camera.pX - 400, (float) camera.pY - 500);
-        // alle entities drawen
-        drawField(c);
+        // translate to virtual coordinates
+        this.camera.translateCanvas(c);
+        // Draw field and contents
+        this.drawField(c);
         player.render(c);
         camera.render(c);
-        // wieder zurück
-        c.translate((float)(-camera.pX + 400), (float)(-camera.pY + 500));
+        // translate back
+        this.camera.inverseTranslateCanvas(c);
     }
 
     private void drawField(Canvas c) {
         Paint p = new Paint();
-        p.setAlpha(255);
-        p.setColor(0xAAAAAAAA);
-        c.drawRect(new Rect(xmin, ymin, xmax, ymax),p);
+        p.setColor(0x707070);
+        p.setAlpha(0xFF);
+        c.drawRect(new Rect(xmin, ymin, xmax, ymax), p);
     }
 
     public void didTouch(float screenX, float screenY) {
         double touchX = this.camera.inverseTranslateX(screenX);
         double touchY = this.camera.inverseTranslateY(screenY);
-        int dx = (int)(touchX - player.pX);
-        int dy = (int)(touchY - player.pY);
-        double maxV = 50;
-        this.player.vX = dx > 0 ? min(dx / 10, maxV) : max(dx / 10, -maxV);
-        this.player.vY = dy > 0 ? min(dy / 10, maxV) : max(dy / 10, -maxV);
+        if(tapControllsPlayer) {
+            // move player towards touch
+            int dx = (int)(touchX - player.pX);
+            int dy = (int)(touchY - player.pY);
+            double maxV = 50;
+            this.player.vX = dx > 0 ? min(dx / 10, maxV) : max(dx / 10, -maxV);
+            this.player.vY = dy > 0 ? min(dy / 10, maxV) : max(dy / 10, -maxV);
+        } else {
+            // move camera towards touch
+            int dx = (int)(touchX - camera.pX);
+            int dy = (int)(touchY - camera.pY);
+            double maxV = 20;
+            this.camera.pX += dx > 0 ? min(dx / 16, maxV) : max(dx / 16, -maxV);
+            this.camera.pY += dy > 0 ? min(dy / 16, maxV) : max(dy / 16, -maxV);
+        }
+
     }
+
 }
