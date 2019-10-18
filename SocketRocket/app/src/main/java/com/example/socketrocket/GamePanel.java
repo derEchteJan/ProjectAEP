@@ -2,7 +2,6 @@ package com.example.socketrocket;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -11,7 +10,7 @@ import com.example.socketrocket.game.Game;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
-    private MainThread mainThread;
+    private GameLoopThread mainThread;
     private Game game;
 
     public GamePanel(Context context) {
@@ -19,7 +18,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         this.getHolder().addCallback(this);
         this.game = new Game();
         this.game.init();
-        this.mainThread = new MainThread(this.getHolder(), this);
+        this.mainThread = new GameLoopThread(this.getHolder(), this);
         this.setFocusable(true);
     }
 
@@ -30,7 +29,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        this.mainThread = MainThread.getCopyOf(this.mainThread);
+        this.mainThread = GameLoopThread.getCopyOf(this.mainThread);
         this.mainThread.start();
         this.mainThread.setRunning(true);
     }

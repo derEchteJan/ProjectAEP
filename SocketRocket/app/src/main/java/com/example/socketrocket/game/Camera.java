@@ -54,7 +54,7 @@ public class Camera extends Entity {
     }
 
     public void inverseTranslateCanvas(Canvas c) {
-        c.translate((float)(-this.screenMidX + this.pX), (float)(-this.screenMidY + this.pY));
+        c.translate((float)(this.pX -this.screenMidX), (float)(this.pY - this.screenMidY));
     }
 
     // MARK: - Entity
