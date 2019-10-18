@@ -3,7 +3,7 @@ package com.example.socketrocket;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
-public class MainThread extends Thread {
+public class GameLoopThread extends Thread {
 
     public static final int MAX_FPS = 30;
     public static Canvas canvas;
@@ -13,20 +13,20 @@ public class MainThread extends Thread {
     private GamePanel gamePanel;
     private boolean running;
 
-    public MainThread(SurfaceHolder surfaceHolder, GamePanel gamePanel) {
+    public GameLoopThread(SurfaceHolder surfaceHolder, GamePanel gamePanel) {
         super();
         this.surfaceHolder = surfaceHolder;
         this.gamePanel = gamePanel;
     }
 
-    private MainThread(MainThread copy) {
+    private GameLoopThread(GameLoopThread copy) {
         this.averageFPS = 0;
         this.surfaceHolder = copy.surfaceHolder;
         this.gamePanel = copy.gamePanel;
         this.running = copy.running;
     }
-    public static MainThread getCopyOf(MainThread other) {
-        return new MainThread(other);
+    public static GameLoopThread getCopyOf(GameLoopThread other) {
+        return new GameLoopThread(other);
     }
 
     public void setRunning(boolean running) {
@@ -75,7 +75,7 @@ public class MainThread extends Thread {
             totalTime += System.nanoTime() - startTime;
             if(frameCount == MAX_FPS) {
                 averageFPS = 1000/((totalTime/frameCount)/1_000_000);
-                System.out.println("average fps: " +  averageFPS);
+                //System.out.println("average fps: " +  averageFPS);
                 frameCount = 0;
                 totalTime = 0;
             }
