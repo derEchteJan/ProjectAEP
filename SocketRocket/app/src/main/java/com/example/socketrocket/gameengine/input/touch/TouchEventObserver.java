@@ -1,6 +1,4 @@
-package com.example.socketrocket.game.input.touch;
-
-import android.view.MotionEvent;
+package com.example.socketrocket.gameengine.input.touch;
 
 public interface TouchEventObserver {
     public abstract boolean handleTouchEvent(TouchEvent e);

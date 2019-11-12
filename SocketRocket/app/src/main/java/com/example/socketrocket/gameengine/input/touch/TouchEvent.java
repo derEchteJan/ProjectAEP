@@ -1,4 +1,4 @@
-package com.example.socketrocket.game.input.touch;
+package com.example.socketrocket.gameengine.input.touch;
 
 public class TouchEvent {
 
