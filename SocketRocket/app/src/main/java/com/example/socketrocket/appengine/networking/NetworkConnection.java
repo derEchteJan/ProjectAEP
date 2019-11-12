@@ -1,4 +1,4 @@
-package com.example.socketrocket.networking;
+package com.example.socketrocket.appengine.networking;
 
 public class NetworkConnection {
 
@@ -14,6 +14,16 @@ public class NetworkConnection {
     }
 
     public static int sendLoginRequest(String username, String password) {
+        // TODO: implementieren
+        return 0;
+    }
+
+    public static int sendLoadUserDataRequest() {
+        // TODO: implementieren
+        return 0;
+    }
+
+    public static int sendLoadHighscoresRequest() {
         // TODO: implementieren
         return 0;
     }

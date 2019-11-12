@@ -1,4 +1,4 @@
-package com.example.socketrocket.networking;
+package com.example.socketrocket.appengine.networking;
 
 public enum NetworkErrorType {
 

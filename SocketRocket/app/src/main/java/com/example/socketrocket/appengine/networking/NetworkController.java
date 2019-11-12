@@ -1,8 +1,5 @@
-package com.example.socketrocket.networking;
+package com.example.socketrocket.appengine.networking;
 
-import android.util.JsonReader;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,6 +17,8 @@ public class NetworkController {
 
     private static String tokenKey = "Postman-Token";
     private static String tokenValue = "c3597b90-80a9-48ef-8ae6-69d9ce1f91d1,6502beb6-f442-440d-896c-79ecca7db99e";
+    private static String contentTypeKey = "Content-Type";
+    private static String contentTypeValue = "Application/json";
     private static int requestIdCounter = 0;
 
     // singleton instance
@@ -74,6 +73,7 @@ public class NetworkController {
             try {
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod(httpMethod);
+                connection.setRequestProperty(contentTypeKey, contentTypeValue);
                 for (String[] header: headers) connection.setRequestProperty(header[0], header[1]);
                 statusCode = connection.getResponseCode();
                 if (statusCode >= 300 || statusCode < 0) {

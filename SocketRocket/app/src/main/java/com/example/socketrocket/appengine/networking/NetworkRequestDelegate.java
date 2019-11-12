@@ -1,4 +1,6 @@
-package com.example.socketrocket.networking;
+package com.example.socketrocket.appengine.networking;
+
+import com.example.socketrocket.appengine.networking.NetworkErrorType;
 
 import org.json.JSONObject;
 

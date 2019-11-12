@@ -1,12 +1,10 @@
-package com.example.socketrocket;
+package com.example.socketrocket.gameengine;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
-import com.example.socketrocket.game.Game;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 

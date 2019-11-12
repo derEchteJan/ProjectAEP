@@ -1,4 +1,4 @@
-package com.example.socketrocket;
+package com.example.socketrocket.gameengine;
 
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;

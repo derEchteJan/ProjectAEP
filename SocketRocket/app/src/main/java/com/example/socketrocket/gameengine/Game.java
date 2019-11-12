@@ -1,9 +1,9 @@
-package com.example.socketrocket.game;
+package com.example.socketrocket.gameengine;
 
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
-import com.example.socketrocket.game.input.touch.TouchEventHandler;
+import com.example.socketrocket.gameengine.input.touch.TouchEventHandler;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
