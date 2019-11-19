@@ -1,8 +1,11 @@
 package com.example.socketrocket;
 
+import android.content.Context;
+
+import com.example.socketrocket.appengine.database.DatabaseConnection;
+import com.example.socketrocket.appengine.database.reflect.objects.Score;
 import com.example.socketrocket.appengine.networking.NetworkErrorType;
 import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
-import com.example.socketrocket.appengine.networking.NetworkConnection;
 
 import org.json.JSONObject;
 
@@ -10,9 +13,24 @@ public class TestDelegate implements NetworkRequestDelegate {
 
     // Beispiel wie man die NetworkConnection benutzen kann wenn man NetworkRequestDelegate implementiert
 
-    public void runTest() {
-        System.out.println("<- start sending test request");
-        NetworkConnection.sendTestRequest(this);
+    public void runTest(Context context) {
+        // TODO: Tests here
+        //
+
+        DatabaseConnection.sharedInstance().initDatabase(context);
+
+        // make new score
+        Score newScore = DatabaseConnection.sharedInstance().getScore(6);
+
+        DatabaseConnection.sharedInstance().deleteScore(newScore);
+
+
+        // Print all scores:
+        for (Score score: DatabaseConnection.sharedInstance().getAllScores()) {
+            System.out.println(score);
+        }
+
+        System.out.println(); // Breakpoint
     }
 
 
