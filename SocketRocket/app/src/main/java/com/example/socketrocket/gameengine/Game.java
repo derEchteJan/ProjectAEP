@@ -32,13 +32,14 @@ public class Game {
         TouchEventHandler.sharedInstance().handleMotionEvent(e);
 
         // TODO: Handling via TocuhEventHandler einbaue
-        /*
+
+
         if (e.getAction() == MotionEvent.ACTION_DOWN || e.getAction() == MotionEvent.ACTION_MOVE) {
             boolean hudDidHanldeEvent = e.getAction() == MotionEvent.ACTION_DOWN ? this.hud.handleTouchEvent(e) : false;
             if(hudDidHanldeEvent == false) {
                 this.handler.didTouch(e.getX(), e.getY());
             }
         }
-        */
+
     }
 }
