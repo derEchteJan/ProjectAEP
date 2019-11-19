@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="544ec117-ca25-444a-a2b9-cea7c410320c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/ProjectAEP.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SocketRocket/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/SocketRocket/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SocketRocket/app/src/main/java/com/example/socketrocket/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/SocketRocket/app/src/main/java/com/example/socketrocket/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SocketRocket/app/src/main/java/com/example/socketrocket/networking/NetworkConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/SocketRocket/app/src/main/java/com/example/socketrocket/networking/NetworkConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SocketRocket/app/src/main/java/com/example/socketrocket/networking/NetworkConnectionDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/SocketRocket/app/src/main/java/com/example/socketrocket/networking/NetworkConnectionDelegate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SocketRocket/app/src/main/java/com/example/socketrocket/networking/demoNetworkDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/SocketRocket/app/src/main/java/com/example/socketrocket/networking/demoNetworkDelegate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SocketRocket/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/SocketRocket/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectConfigurationFiles">
+    <option name="files">
+      <list>
+        <option value="$PROJECT_DIR$/.idea/ProjectAEP.iml" />
+        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
+        <option value="$PROJECT_DIR$/.idea/modules.xml" />
+        <option value="$PROJECT_DIR$/.idea/codeStyles/Project.xml" />
+        <option value="$PROJECT_DIR$/.idea/.gitignore" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1TW0d3G604SOCShhNPb7486IWI8" />
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$USER_HOME$/AndroidStudioProjects/MeineErsteApp" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="544ec117-ca25-444a-a2b9-cea7c410320c" name="Default Changelist" comment="" />
+      <created>1573560627130</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1573560627130</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
