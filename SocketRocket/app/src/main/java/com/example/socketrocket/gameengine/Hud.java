@@ -1,4 +1,4 @@
-package com.example.socketrocket.game;
+package com.example.socketrocket.gameengine;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
