@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_main);
 
@@ -42,5 +43,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void openGameActivity(){
         Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
+        //this.setContentView(new GamePanel(this));
+        //new TestDelegate().runTest(this);
+
     }
 }
