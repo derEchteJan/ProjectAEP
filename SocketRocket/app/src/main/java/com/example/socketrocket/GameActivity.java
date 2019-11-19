@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.example.socketrocket.gameengine.GamePanel;
 
 public class GameActivity extends Activity{
-    TextView txvheader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
