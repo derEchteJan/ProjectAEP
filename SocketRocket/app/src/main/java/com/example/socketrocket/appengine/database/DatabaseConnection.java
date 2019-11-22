@@ -19,6 +19,18 @@ public class DatabaseConnection {
         DatabaseController.sharedInstance().initDatabase(context);
     }
 
+    public boolean deleteDatabase() {
+        return DatabaseController.sharedInstance().deleteDatabase();
+    }
+
+    public String getDatabasePath() {
+        return DatabaseController.sharedInstance().getDatabasePath();
+    }
+
+    public long getDatabaseSize() {
+        return DatabaseController.sharedInstance().getDatabaseSize();
+    }
+
 
     // MARK: Objects
 
