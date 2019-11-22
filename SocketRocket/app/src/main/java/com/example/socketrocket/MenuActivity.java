@@ -78,8 +78,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void goToDebugOptions() {
-        // TODO: Jan
-        System.out.println("goToDebugOptions");
-        return;
+        Intent intent = new Intent(this, DebugOptionsActivity.class);
+        startActivity(intent);
     }
 }

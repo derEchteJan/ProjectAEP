@@ -35,6 +35,10 @@ public class SQLiteHandle extends SQLiteOpenHelper {
         return dataSets;
     }
 
+    protected String getDatabasePath() {
+        return this.getReadableDatabase().getPath();
+    }
+
 
     // MARK: - SQLiteOpenHelper
 

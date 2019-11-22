@@ -4,6 +4,14 @@ import android.content.Context;
 import com.example.socketrocket.appengine.database.reflect.ReflectableObject;
 import com.example.socketrocket.appengine.database.reflect.objects.*;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class DatabaseController {
 
     protected static final int DATABASE_VERSION = 1;
@@ -16,7 +24,7 @@ public class DatabaseController {
 
     private ReflectableObjectHandler mainObjectHandler = null;
     private SQLiteHandle mainDBhandle = null;
-
+    private Context context = null;
 
     // MARK: - External
 
@@ -29,6 +37,7 @@ public class DatabaseController {
          *  - Migration durchführen
          *  - Bei fehlern löschen und neu aufsetzen
          * */
+        this.context = context;
         this.mainDBhandle = new SQLiteHandle(context, APP_DB_PATH, DATABASE_VERSION);
         this.mainObjectHandler = new ReflectableObjectHandler();
         this.mainObjectHandler.setHandle(this.mainDBhandle);
@@ -37,6 +46,40 @@ public class DatabaseController {
         for (ReflectableObject prototype: tablePrototypes) {
             this.mainObjectHandler.createTable(prototype);
         }
+    }
+
+    protected boolean deleteDatabase() {
+        if (this.mainDBhandle == null) return false;
+        String path = this.mainDBhandle.getDatabasePath();
+        try {
+            Path p = Paths.get(path);
+            Files.delete(p);
+        } catch (IOException e) {
+            System.out.println(e.getClass().getSimpleName() + ": " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    protected String getDatabasePath() {
+        return this.mainDBhandle.getDatabasePath();
+    }
+
+    protected long getDatabaseSize() {
+        if (this.mainDBhandle == null) return 0;
+        String path = this.mainDBhandle.getDatabasePath();
+        int available = 0;
+        try {
+            InputStream fileStream = new FileInputStream(path);
+            available = fileStream.available();
+        } catch (FileNotFoundException e) {
+            System.out.println("File Not found: " + path);
+            return -1;
+        } catch (IOException e) {
+            System.out.println(e.getClass().getSimpleName() + ": " + e.getMessage());
+            return -1;
+        }
+        return available;
     }
 
 
