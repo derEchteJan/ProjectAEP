@@ -18,7 +18,7 @@ public class Camera extends Entity {
         this.screenMidX = GameConstants.SCREEN_W/2;
         this.screenMidY = GameConstants.SCREEN_H/2;
         this.zoomFactor = (double)GameConstants.SCREEN_H / (double)GameConstants.VIRTUAL_SCREEN_H;
-        //zoomFactor = 1.0;
+        //zoomFactor = 0.5;
         this.showFocusPoint = GameConstants.DEBUG_MODE;
     }
 

@@ -3,42 +3,43 @@ package com.example.socketrocket.gameengine.input.touch.buttons;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-
-import com.example.socketrocket.gameengine.input.touch.TouchEvent;
-import com.example.socketrocket.gameengine.input.touch.TouchEventHandler;
-import com.example.socketrocket.gameengine.input.touch.TouchEventObserver;
+import com.example.socketrocket.gameengine.input.touch.*;
 
 public abstract class TouchEventButton implements TouchEventObserver {
-
-    public enum ActionType {
-        onTouch, onTouchDown, onTouchUpInside;
-    }
 
     protected final int noCapturedPointerId = -1;
 
     protected Rect frame;
-    protected ActionType actionType;
-    protected int capturedPointerId = noCapturedPointerId;
+    protected int capturedPointerId;
+    protected boolean isDown;
 
     public TouchEventButton(Rect frame) {
         this.frame = frame;
-        this.actionType = ActionType.onTouchUpInside;
+        this.capturedPointerId = noCapturedPointerId;
+        this.isDown = false;
     }
 
-    public abstract void action();
+
+    // MARK: - Override
+
+    public void onTouchDown(TouchEvent e) {}
+
+    public void onTouchMove(TouchEvent e) {}
+
+    public void onTouchUp(TouchEvent e) {}
+
+    public void onTouchUpInside(TouchEvent e) {}
 
 
     // MARK: -  Methods
 
     public void render(Canvas c) {
-        Paint p = new Paint();
-        p.setColor(0xff00ff);
-        p.setAlpha(0xFF);
-        c.drawRect(this.frame, p);
-    }
-
-    public void setActionType(ActionType type) {
-        this.actionType = type;
+        if(this.isDown) {
+            Paint mainColor = new Paint();
+            mainColor.setColor(0x909090);
+            mainColor.setAlpha(64);
+            c.drawRect(this.frame, mainColor);
+        }
     }
 
     public boolean handleTouchEvent(TouchEvent e) {
@@ -49,6 +50,7 @@ public abstract class TouchEventButton implements TouchEventObserver {
                         boolean didCapturePointer = TouchEventHandler.sharedInstance().requestCaptureForPointer(e.pointerId, this);
                         if (didCapturePointer) {
                             this.capturedPointerId = e.pointerId;
+                            this.isDown = true;
                             this.onTouchDown(e);
                             return true;
                         }
@@ -65,6 +67,8 @@ public abstract class TouchEventButton implements TouchEventObserver {
                         boolean didReleasePointer = TouchEventHandler.sharedInstance().releaseCaptureForPointer(e.pointerId, this);
                         if (didReleasePointer) {
                             this.capturedPointerId = this.noCapturedPointerId;
+                            this.isDown = false;
+                            this.onTouchUpInside(e);
                             this.onTouchUp(e);
                             return true;
                         }
@@ -88,6 +92,7 @@ public abstract class TouchEventButton implements TouchEventObserver {
                         boolean didReleasePointer = TouchEventHandler.sharedInstance().releaseCaptureForPointer(e.pointerId, this);
                         if (didReleasePointer) {
                             this.capturedPointerId = this.noCapturedPointerId;
+                            this.isDown = false;
                             this.onTouchUp(e);
                             return true;
                         }
@@ -96,40 +101,6 @@ public abstract class TouchEventButton implements TouchEventObserver {
                 default: // never
                     return false;
             }
-        }
-    }
-
-
-    // MARK: - Events
-
-    protected void onTouchDown(TouchEvent e) {
-        switch(this.actionType) {
-            case onTouch:
-            case onTouchDown:
-                this.action();
-                break;
-            default:
-                return;
-        }
-    }
-
-    protected void onTouchMove(TouchEvent e) {
-        switch(this.actionType) {
-            case onTouch:
-                this.action();
-                break;
-            default:
-                return;
-        }
-    }
-
-    protected void onTouchUp(TouchEvent e) {
-        switch(this.actionType) {
-            case onTouchUpInside:
-                this.action();
-                break;
-            default:
-                return;
         }
     }
 }
