@@ -4,18 +4,21 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.example.socketrocket.gameengine.entity.Entity;
+
 public class Camera extends Entity {
 
     private Entity child;
     private double screenMidX, screenMidY;
-    private double followFactor;
+    private double zoomFactor;
     private boolean showFocusPoint;
 
     public Camera() {
-        super();
+        super(null);
         this.screenMidX = GameConstants.SCREEN_W/2;
         this.screenMidY = GameConstants.SCREEN_H/2;
-        this.followFactor = 0.5;
+        this.zoomFactor = (double)GameConstants.SCREEN_H / (double)GameConstants.VIRTUAL_SCREEN_H;
+        //zoomFactor = 1.0;
         this.showFocusPoint = GameConstants.DEBUG_MODE;
     }
 
@@ -32,16 +35,25 @@ public class Camera extends Entity {
     // MARK: Virtual to Display
 
     public float translateX(double x) {
-        return (float)(x - this.pX + this.screenMidX);
+        return (float)((x - this.pX)*this.zoomFactor + this.screenMidX);
     }
 
     public float translateY(double y) {
-        return (float)(y - this.pY + this.screenMidY);
+        return (float)((this.pY - y)*this.zoomFactor + this.screenMidY);
+    }
+
+    public float translateLength(double virtualLength) {
+        return (float)(virtualLength*this.zoomFactor);
     }
 
     public void translateCanvas(Canvas c) {
         c.translate((float)(this.screenMidX - this.pX), (float)(this.screenMidY - this.pY));
     }
+
+    public Rect translateRect(Rect virtualRect) {
+        return new Rect((int)translateX(virtualRect.left), (int)translateY(virtualRect.top), (int)translateX(virtualRect.right), (int)translateY(virtualRect.bottom));
+    }
+
 
     // MARK: Display to Virtual
 

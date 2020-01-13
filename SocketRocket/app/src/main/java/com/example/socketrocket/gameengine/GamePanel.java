@@ -1,20 +1,24 @@
 package com.example.socketrocket.gameengine;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.socketrocket.GameActivity;
+
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     private GameLoopThread mainThread;
     private Game game;
 
-    public GamePanel(Context context) {
+    public GamePanel(Context context, Activity parentActivity) {
         super(context);
         this.getHolder().addCallback(this);
         this.game = new Game();
+        this.game.setParentActivity(parentActivity);
         this.game.init();
         this.mainThread = new GameLoopThread(this.getHolder(), this);
         this.setFocusable(true);
@@ -51,7 +55,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // TODO: Handle Tap Input here
-        this.game.handleTouchEvent(event);
+        this.game.handleTouchInput(event);
         return true;
     }
 
@@ -67,4 +71,5 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawColor(0xFF404040);
         this.game.render(canvas);
     }
+
 }
