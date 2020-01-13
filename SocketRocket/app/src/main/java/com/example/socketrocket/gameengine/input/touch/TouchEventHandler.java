@@ -2,6 +2,8 @@ package com.example.socketrocket.gameengine.input.touch;
 
 import android.view.MotionEvent;
 
+import com.example.socketrocket.gameengine.GameConstants;
+
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -23,6 +25,7 @@ public class TouchEventHandler {
         switch (e.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
+            case MotionEvent.ACTION_CANCEL:
                 this.pointerCount = e.getPointerCount() - 1;
                 action = TouchEvent.Action.UP;
                 break;
@@ -36,7 +39,7 @@ public class TouchEventHandler {
                 action = TouchEvent.Action.MOVE;
                 break;
             default:
-                break;
+                throw new RuntimeException("TouchEventHandler hat ein unerwartetes MotionEvent erhalten, code: " +e.getAction());
         }
         TouchEvent[] touchEventsForDebugPrinting = new TouchEvent[e.getPointerCount()];
         for (int i = 0; i < touchEventsForDebugPrinting.length; i++) {
@@ -46,11 +49,10 @@ public class TouchEventHandler {
             if(!pointerWasCaptured) {
                 this.handOverToObserverHierachy(nextEvent);
             }
-            // TODO: temporär einfach direkt ans hud
             touchEventsForDebugPrinting[i] = nextEvent;
         }
-        // TODO: Debug only
-        //printEvents(touchEventsForDebugPrinting);
+        if( GameConstants.DEBUG_MODE)
+            printEvents(touchEventsForDebugPrinting);
     }
 
     private boolean handOverToCapturedPointerOwner(TouchEvent event) {
@@ -71,7 +73,7 @@ public class TouchEventHandler {
             }
         }
     }
-    // TODO: DEBUG - Remove later
+
     private /*debug*/ void printEvents(TouchEvent[] events) {
         String result = "\n[\n";
         for (TouchEvent e: events) {
