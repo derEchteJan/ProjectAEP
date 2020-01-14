@@ -7,7 +7,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.socketrocket.fragments.LoginFragment;
@@ -67,9 +66,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void goToHighscores() {
-        // TODO: Jan
-        System.out.println("goToHighscores");
-        return;
+        Intent intent = new Intent(this, HighscoresActivity.class);
+        this.startActivity(intent);
     }
 
     public void goToLogin() {

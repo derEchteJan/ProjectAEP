@@ -2,8 +2,10 @@ package com.example.socketrocket.gameengine.input.touch;
 
 import android.view.MotionEvent;
 
-import java.util.ArrayList;
+import com.example.socketrocket.gameengine.GameConstants;
+
 import java.util.HashMap;
+import java.util.Stack;
 
 public class TouchEventHandler {
 
@@ -11,7 +13,7 @@ public class TouchEventHandler {
     private static final TouchEventHandler thisInstance = new TouchEventHandler();
     public static TouchEventHandler sharedInstance() { return thisInstance; };
 
-    private ArrayList<TouchEventObserver> observers = new ArrayList<>();
+    private Stack<TouchEventObserver> observers = new Stack<>();
     private HashMap<Integer, TouchEventObserver> capturedPointers = new HashMap<>();
     private int pointerCount = 0;
 
@@ -23,6 +25,7 @@ public class TouchEventHandler {
         switch (e.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
+            case MotionEvent.ACTION_CANCEL:
                 this.pointerCount = e.getPointerCount() - 1;
                 action = TouchEvent.Action.UP;
                 break;
@@ -36,17 +39,41 @@ public class TouchEventHandler {
                 action = TouchEvent.Action.MOVE;
                 break;
             default:
-                break;
+                throw new RuntimeException("TouchEventHandler hat ein unerwartetes MotionEvent erhalten, code: " +e.getAction());
         }
-        TouchEvent[] touchEvents = new TouchEvent[e.getPointerCount()];
-        for (int i = 0; i < touchEvents.length; i++) {
+        TouchEvent[] touchEventsForDebugPrinting = new TouchEvent[e.getPointerCount()];
+        for (int i = 0; i < touchEventsForDebugPrinting.length; i++) {
             TouchEvent.Action actionToSet = i == e.getActionIndex() ? action : TouchEvent.Action.MOVE;
-            touchEvents[i] = new TouchEvent(i, e.getPointerId(i), actionToSet, e.getX(i), e.getY(i));
+            TouchEvent nextEvent = new TouchEvent(i, e.getPointerId(i), actionToSet, e.getX(i), e.getY(i));
+            boolean pointerWasCaptured = this.handOverToCapturedPointerOwner(nextEvent);
+            if(!pointerWasCaptured) {
+                this.handOverToObserverHierachy(nextEvent);
+            }
+            touchEventsForDebugPrinting[i] = nextEvent;
         }
-        printEvents(touchEvents);
+        if( GameConstants.DEBUG_MODE)
+            printEvents(touchEventsForDebugPrinting);
     }
 
-    // TODO: REMOVE
+    private boolean handOverToCapturedPointerOwner(TouchEvent event) {
+        if (this.capturedPointers.containsKey(event.pointerId)) {
+            this.capturedPointers.get(event.pointerId).handleTouchEvent(event);
+            return true;
+        }
+        return false;
+    }
+
+    private void handOverToObserverHierachy(TouchEvent event) {
+        if(this.observers.isEmpty()) return;
+        for(int i = this.observers.size() - 1; i >= 0; i--) {
+            TouchEventObserver next = observers.elementAt(i);
+            boolean didHandleEvent = next.handleTouchEvent(event);
+            if(didHandleEvent) {
+                return;
+            }
+        }
+    }
+
     private /*debug*/ void printEvents(TouchEvent[] events) {
         String result = "\n[\n";
         for (TouchEvent e: events) {
@@ -56,6 +83,9 @@ public class TouchEventHandler {
         System.out.println(result);
     }
 
+
+    // MARK: - Public Methods
+
     public int getCurrentPointerCount() {
         return this.pointerCount;
     }
@@ -64,7 +94,7 @@ public class TouchEventHandler {
 
     public void addObserver(TouchEventObserver observer) {
         if (observer != null && !this.observers.contains(observer)) {
-            this.observers.add(observer);
+            this.observers.push(observer);
         }
     }
 
@@ -72,6 +102,10 @@ public class TouchEventHandler {
         if (observer != null && this.observers.contains(observer)) {
             this.observers.remove(observer);
         }
+    }
+
+    public void removeAllObservers() {
+        this.observers.removeAllElements();
     }
 
     public boolean requestCaptureForPointer(int pointerId, TouchEventObserver requestingObserver) {
