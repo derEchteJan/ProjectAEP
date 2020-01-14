@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.socketrocket.fragments.LoginFragment;
+
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
@@ -19,7 +21,6 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_menu);
 
         float size = new Button(this).getTextSize();
-        Toast.makeText(this, "Textgröße " + size, Toast.LENGTH_LONG).show();
 
         //txvheader = (TextView)this.findViewById(R.id.txvHeader);
         Button btnStart = (Button)this.findViewById(R.id.btnStart);
@@ -71,8 +72,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
     public void goToLogin() {
         // TODO: Chris
-        System.out.println("goToLogin");
-        return;
+        Intent intent = new Intent(this, LoginFragment.class);
+        startActivity(intent);
     }
 
     public void goToDebugOptions() {
