@@ -21,8 +21,8 @@ public class Hud implements TouchEventObserver {
     private Rect shieldBar, attackBar;
     private Paint shieldBarColor, attackBarColor, emptyBarColor;
 
-    public Hud(GameDelegate game) {
-        this.gameDelegate = game;
+    public Hud(GameDelegate gameDelegate) {
+        this.gameDelegate = gameDelegate;
         this.initColors();
         this.initButtons();
         this.initBarFrames();
@@ -76,7 +76,8 @@ public class Hud implements TouchEventObserver {
         Rect menuButtonFrame = new Rect(20,20,160,160); // TODO: Vernünftig machen
         TouchEventButton menuButton = new TouchEventButton(menuButtonFrame) {
             @Override public void onTouchUpInside(TouchEvent e) {
-                gameDelegate.openMenu();
+                gameDelegate.quitToMainMenu(); // todo: austauschen
+                //gameDelegate.openMenu();
             }
         };
         this.buttons = new TouchEventButton[] {menuButton, specialButton, shieldButton, attackButton, flyButton};
