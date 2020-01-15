@@ -14,6 +14,7 @@ import com.example.socketrocket.appengine.database.DatabaseController;
 
 public class DebugOptionsActivity extends Activity implements View.OnClickListener {
 
+    private DatabaseConnection dbHandle;
 
     // MARK: - Lifecycle
 
@@ -24,7 +25,7 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setContentView(R.layout.activity_debug_options);
         this.initViews();
-        DatabaseConnection.sharedInstance().initDatabase(this);
+        this.dbHandle = new DatabaseConnection(this);
     }
 
 
@@ -63,22 +64,22 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
     }
 
     private void onReinitDBPressed() {
-        DatabaseConnection.sharedInstance().initDatabase(this);
+        this.dbHandle = new DatabaseConnection(this);
     }
 
     private void onDeleteDBPressed() {
-        boolean success = DatabaseConnection.sharedInstance().deleteDatabase();
+        boolean success = this.dbHandle.deleteDatabase();
         String result = success ? "Deleted Database" : "File not found";
         System.out.println(result);
         Toast.makeText(this, result, Toast.LENGTH_LONG).show();
     }
 
     private void onDBInfoPressed() {
-        String path = DatabaseConnection.sharedInstance().getDatabasePath();
+        String path = this.dbHandle.getDatabasePath();
         String result;
         if(path != null) {
             result = "Database: " + path + "\n";
-            result += "File size: " + DatabaseConnection.sharedInstance().getDatabaseSize();
+            result += "File size: " + this.dbHandle.getDatabaseSize();
         } else {
             result = "Database: none";
         }
