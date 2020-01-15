@@ -1,7 +1,10 @@
 package com.example.socketrocket.appengine.networking;
 
+import android.app.Activity;
+
 import com.example.socketrocket.appengine.BackgroundTaskHandler;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,18 +55,18 @@ public class NetworkController {
 
     protected void forwardDidRecieveResponse(NetworkRequestDelegate caller, int requestId, String response) {
         final NetworkRequestDelegate safeHandle = caller;
+        final Activity context = (Activity) caller;
         final int safeRequestId = requestId;
-        try {
-            final JSONObject json = new JSONObject(response);
-            safeHandle.runOnUiThread(new Runnable(){
-                public void run(){
-                    safeHandle.didRecieveNetworkResponse(safeRequestId, json);
+        final JSONObject[] results = this.parseResponse(response);
+        if(results != null) {
+            context.runOnUiThread(new Runnable() {
+                public void run() {
+                    safeHandle.didRecieveNetworkResponse(safeRequestId, results);
                 }
             });
-        } catch (JSONException e) {
-            // json parsing error
+        } else { // parsing error
             // TODO: Fehler loggen
-            safeHandle.runOnUiThread(new Runnable(){
+            context.runOnUiThread(new Runnable(){
                 public void run(){
                     safeHandle.didRecieveNetworkError(safeRequestId, NetworkErrorType.badResponse);
                 }
@@ -73,7 +76,16 @@ public class NetworkController {
 
     protected void forwardDidRecieveError(NetworkRequestDelegate caller, int requestId, NetworkErrorType error) {
         // TODO: Fehler loggen
-        caller.didRecieveNetworkError(requestId, error);
+        final NetworkRequestDelegate safeHandle = caller;
+        final NetworkErrorType safeErrorType = error;
+        final Activity context = (Activity) caller;
+        final int safeRequestId = requestId;
+        context.runOnUiThread(new Runnable(){
+            public void run(){
+                safeHandle.didRecieveNetworkError(safeRequestId, safeErrorType);
+            }
+        });
+
     }
 
     // MARK: - subs
@@ -132,6 +144,24 @@ public class NetworkController {
             cleanedHeaders[entryCount + 1][0] = "token";
             cleanedHeaders[entryCount + 1][1] = "value";
             return cleanedHeaders;
+        }
+    }
+
+    private JSONObject[] parseResponse(String rawData) {
+        try {
+            JSONObject singleObject = new JSONObject(rawData);
+            return new JSONObject[] {singleObject};
+        } catch(JSONException e1) {
+            try {
+                JSONArray jsonArray = new JSONArray(rawData);
+                JSONObject[] results = new JSONObject[jsonArray.length()];
+                for(int i = 0; i < jsonArray.length(); i++) {
+                    results[i] = jsonArray.getJSONObject(i);
+                }
+                return results;
+            } catch(JSONException e2) {
+                return null;
+            }
         }
     }
 

@@ -17,7 +17,7 @@ import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
 
 import org.json.JSONObject;
 
-public class DebugOptionsActivity extends Activity implements View.OnClickListener {
+public class DebugOptionsActivity extends Activity implements View.OnClickListener, NetworkRequestDelegate {
 
     private DatabaseConnection dbHandle;
 
@@ -55,14 +55,13 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
             case R.id.button_reinit_db: this.onReinitDBPressed(); break;
             case R.id.button_delete_db: this.onDeleteDBPressed(); break;
             case R.id.button_info_db: this.onDBInfoPressed(); break;
-            //case R.id.button_populate_db: this.onPopulateDBPressed(); break;
+            case R.id.button_populate_db: this.onPopulateDBPressed(); break;
             default:
-                Toast.makeText(this, "Action not implemented", Toast.LENGTH_LONG).show();
-                break;
+                Toast.makeText(this, "Action not implemented", Toast.LENGTH_LONG).show(); break;
         }
     }
 
-    // MARK: - Buttons
+    // MARK: - Button Actions
 
     private void onMainMenuPressed() {
         this.finish();
@@ -93,6 +92,22 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
     }
 
     private void onPopulateDBPressed() {
+        NetworkConnection.sendLoadHighscoresRequest(this);
+    }
 
+    @Override
+    public void didRecieveNetworkResponse(int requestId, JSONObject[] data) {
+        String result;
+        if(data.length > 0) result = "Recieved: "+data[0].toString();
+        else result = "recieved empty response";
+        System.out.println(result);
+        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void didRecieveNetworkError(int requestId, NetworkErrorType errorType) {
+        String result = "Network error: " + errorType.toString();
+        System.out.println(result);
+        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
     }
 }
