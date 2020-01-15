@@ -5,11 +5,12 @@ import org.json.JSONObject;
 
 public class NetworkConnection {
 
+    // only for debugging
     public static int sendTestRequest(NetworkRequestDelegate delegate) {
         return NetworkController.sharedInstance().generateRequest(delegate, "/test", "GET", null, null);
     }
 
-    public static int sendRegistrationRequest(NetworkRequestDelegate delegate, String name, String email, String password) {
+    public static int sendSignUpRequest(NetworkRequestDelegate delegate, String name, String email, String password) {
         try {
             JSONObject json = new JSONObject();
             json.accumulate("email", email);

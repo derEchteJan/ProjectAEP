@@ -40,49 +40,42 @@ public class NetworkController {
     protected int generateRequest(NetworkRequestDelegate caller, String path, String httpMethod, String[][] headers, String payload) {
         if (caller == null) return NetworkRequestDelegate.INVALID_REQUEST_ID;
         int newRequestId = generateRequestId();
-        URL url = null;
+        URL url;
         try {
             url = new URL(BASE_URL + path);
         } catch (MalformedURLException e) {
             return NetworkRequestDelegate.INVALID_REQUEST_ID;
         }
         String[][] cleanedHeaders = cleanHeaders(headers);
-        //NetworkRequestTask requestTask = new NetworkRequestTask(caller, newRequestId, url, httpMethod, cleanedHeaders, payload);
-        //new Thread(requestTask).start();
         this.startRequestTaskThread(caller, newRequestId,url, httpMethod, cleanedHeaders, payload);
         return newRequestId;
     }
 
-    protected void forwardDidRecieveResponse(NetworkRequestDelegate caller, int requestId, String response) {
-        final NetworkRequestDelegate safeHandle = caller;
-        final Activity context = (Activity) caller;
-        final int safeRequestId = requestId;
+    protected void forwardDidRecieveResponse(final NetworkRequestDelegate caller, final int requestId, final String response) {
+        final Activity contextOfCaller = (Activity) caller;
         final JSONObject[] results = this.parseResponse(response);
         if(results != null) {
-            context.runOnUiThread(new Runnable() {
+            contextOfCaller.runOnUiThread(new Runnable() {
                 public void run() {
-                    safeHandle.didRecieveNetworkResponse(safeRequestId, results);
+                    caller.didRecieveNetworkResponse(requestId, results);
                 }
             });
         } else { // parsing error
             // TODO: Fehler loggen
-            context.runOnUiThread(new Runnable(){
+            contextOfCaller.runOnUiThread(new Runnable(){
                 public void run(){
-                    safeHandle.didRecieveNetworkError(safeRequestId, NetworkErrorType.badResponse);
+                    caller.didRecieveNetworkError(requestId, NetworkErrorType.badResponse);
                 }
             });
         }
     }
 
-    protected void forwardDidRecieveError(NetworkRequestDelegate caller, int requestId, NetworkErrorType error) {
+    protected void forwardDidRecieveError(final NetworkRequestDelegate caller, final int requestId, final NetworkErrorType error) {
         // TODO: Fehler loggen
-        final NetworkRequestDelegate safeHandle = caller;
-        final NetworkErrorType safeErrorType = error;
-        final Activity context = (Activity) caller;
-        final int safeRequestId = requestId;
-        context.runOnUiThread(new Runnable(){
+        final Activity contextOfCaller = (Activity) caller;
+        contextOfCaller.runOnUiThread(new Runnable(){
             public void run(){
-                safeHandle.didRecieveNetworkError(safeRequestId, safeErrorType);
+                caller.didRecieveNetworkError(requestId, error);
             }
         });
 
