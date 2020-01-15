@@ -11,6 +11,11 @@ import android.widget.Toast;
 
 import com.example.socketrocket.appengine.database.DatabaseConnection;
 import com.example.socketrocket.appengine.database.DatabaseController;
+import com.example.socketrocket.appengine.networking.NetworkConnection;
+import com.example.socketrocket.appengine.networking.NetworkErrorType;
+import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
+
+import org.json.JSONObject;
 
 public class DebugOptionsActivity extends Activity implements View.OnClickListener {
 

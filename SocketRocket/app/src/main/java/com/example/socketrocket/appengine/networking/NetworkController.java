@@ -1,5 +1,7 @@
 package com.example.socketrocket.appengine.networking;
 
+import com.example.socketrocket.appengine.BackgroundTaskHandler;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,13 +51,23 @@ public class NetworkController {
     }
 
     protected void forwardDidRecieveResponse(NetworkRequestDelegate caller, int requestId, String response) {
+        final NetworkRequestDelegate safeHandle = caller;
+        final int safeRequestId = requestId;
         try {
-            JSONObject json = new JSONObject(response);
-            caller.didRecieveNetworkResponse(requestId, json);
+            final JSONObject json = new JSONObject(response);
+            safeHandle.runOnUiThread(new Runnable(){
+                public void run(){
+                    safeHandle.didRecieveNetworkResponse(safeRequestId, json);
+                }
+            });
         } catch (JSONException e) {
             // json parsing error
             // TODO: Fehler loggen
-            caller.didRecieveNetworkError(requestId, NetworkErrorType.badResponse);
+            safeHandle.runOnUiThread(new Runnable(){
+                public void run(){
+                    safeHandle.didRecieveNetworkError(safeRequestId, NetworkErrorType.badResponse);
+                }
+            });
         }
     }
 
