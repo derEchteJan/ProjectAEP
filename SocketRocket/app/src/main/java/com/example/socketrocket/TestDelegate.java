@@ -17,16 +17,16 @@ public class TestDelegate implements NetworkRequestDelegate {
         // TODO: Tests here
         //
 
-        DatabaseConnection.sharedInstance().initDatabase(context);
+        DatabaseConnection handle = new DatabaseConnection(context);
 
         // make new score
-        Score newScore = DatabaseConnection.sharedInstance().getScore(6);
+        Score newScore = handle.getScore(6);
 
-        DatabaseConnection.sharedInstance().deleteScore(newScore);
+        handle.deleteScore(newScore);
 
 
         // Print all scores:
-        for (Score score: DatabaseConnection.sharedInstance().getAllScores()) {
+        for (Score score: handle.getAllScores()) {
             System.out.println(score);
         }
 

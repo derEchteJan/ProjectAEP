@@ -17,10 +17,7 @@ public class DatabaseController {
     protected static final int DATABASE_VERSION = 1;
     protected static final String APP_DB_PATH = "main.db";
 
-    private static final DatabaseController thisInstance = new DatabaseController();
-    protected static DatabaseController sharedInstance() { return thisInstance; }
-
-    private DatabaseController() {}
+    protected DatabaseController() {}
 
     private ReflectableObjectHandler mainObjectHandler = null;
     private SQLiteHandle mainDBhandle = null;
@@ -30,7 +27,7 @@ public class DatabaseController {
 
     // Management
 
-    protected void initDatabase(Context context) {
+    protected void initWithContext(Context context) {
         /* TODO: Datenbank initialisieren bei jedem Appstart
          *  - Wenn datei nicht da -> neu erzeugen
          *  - Tabellen ersetellen falls nötig
