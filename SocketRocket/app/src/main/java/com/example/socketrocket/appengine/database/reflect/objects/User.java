@@ -8,7 +8,6 @@ public class User extends ReflectableObject {
     public String name;
     public String email;
     public String password;
-    public String salt;
     public String token;
 
 
