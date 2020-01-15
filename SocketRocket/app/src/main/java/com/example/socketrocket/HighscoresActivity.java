@@ -18,6 +18,7 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
     private TextView title;
     private boolean isLoading = false;
     private Score[] scores = new Score[0];
+    private DatabaseConnection dbHandle;
 
 
     // MARK: - Lifecycle
@@ -28,7 +29,7 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_highscores);
-        DatabaseConnection.sharedInstance().initDatabase(this);
+        this.dbHandle = new DatabaseConnection(this);
         this.initViews();
     }
 
@@ -90,7 +91,7 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
             public void inBackground() {
                 // debug delay on data loading time
                 try { Thread.sleep(2000); } catch (InterruptedException e) {}
-                Score[] data = DatabaseConnection.sharedInstance().getAllScores();
+                Score[] data = dbHandle.getAllScores();
                 if (data != null) {
                     scores = data;
                 } else {
