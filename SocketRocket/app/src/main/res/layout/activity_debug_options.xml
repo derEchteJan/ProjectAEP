@@ -2,92 +2,171 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/btnTest"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_floating_material_dark">
+    android:background="@color/background_floating_material_dark"
+    android:textDirection="anyRtl"
+    tools:context=".DebugOptionsActivity" >
 
-    <Button
-        android:id="@+id/button_main_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/abc_search_url_text_normal"
-        android:text="Zurück"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/button_reinit_db"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Reinitialisieren"
-        app:layout_constraintStart_toStartOf="@id/button_main_menu"
-        app:layout_constraintTop_toBottomOf="@id/textView_db" />
+        <LinearLayout
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/debug_button_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/abc_search_url_text_normal"
+                android:text="Zurück" />
 
-    <Button
-        android:id="@+id/button_delete_db"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Löschen"
-        app:layout_constraintStart_toStartOf="@id/button_main_menu"
-        app:layout_constraintTop_toBottomOf="@+id/button_reinit_db" />
 
-    <TextView
-        android:id="@+id/textView_db"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Datenbank"
-        android:textColor="@android:color/white"
-        android:textSize="20dp"
-        app:layout_constraintStart_toStartOf="@id/button_main_menu"
-        app:layout_constraintTop_toBottomOf="@+id/button_main_menu" />
+            <!-- Database -->
 
-    <Button
-        android:id="@+id/button_info_db"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Info printen"
-        app:layout_constraintStart_toStartOf="@id/button_main_menu"
-        app:layout_constraintTop_toBottomOf="@+id/button_delete_db" />
+            <TextView
+                android:id="@+id/debug_textview_db_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Datenbank"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#FFFFFFFF" />
+            <Button
+                android:id="@+id/debug_button_reinit_db"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Datenbank neu Inititalisieren" />
+            <Button
+                android:id="@+id/debug_button_delete_db"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Datenbank Löschen" />
+            <Button
+                android:id="@+id/debug_button_print_db_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Datenbank Info anzeigen" />
+            <Button
+                android:id="@+id/debug_button_print_user_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Userdaten anzeigen" />
+            <Button
+                android:id="@+id/debug_button_populate_db"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Dummy Daten speichern" />
 
-    <Button
-        android:id="@+id/button_populate_db"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Dummy Daten einfügen"
-        app:layout_constraintStart_toStartOf="@id/button_main_menu"
-        app:layout_constraintTop_toBottomOf="@+id/button_info_db" />
 
-    <TextView
-        android:id="@+id/textView_others"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Sonstiges"
-        android:textColor="@android:color/white"
-        android:textSize="20dp"
-        app:layout_constraintStart_toStartOf="@id/button_main_menu"
-        app:layout_constraintTop_toBottomOf="@+id/button_populate_db" />
+            <!-- Network -->
 
-    <Switch
-        android:id="@+id/switch_debug_mode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Debug Modus"
-        android:textColor="@android:color/white"
-        android:textSize="18dp"
-        android:thumbTint="@color/abc_search_url_text_normal"
-        android:trackTint="@color/abc_search_url_text_normal"
-        app:layout_constraintStart_toStartOf="@id/button_main_menu"
-        app:layout_constraintTop_toBottomOf="@+id/textView_others"
-        tools:trackTintMode="add" />
+            <TextView
+                android:id="@+id/debug_textview_network_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Netzwerk"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#FFFFFFFF" />
+            <TextView
+                android:id="@+id/debug_textview_network_template_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="User Template"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="40dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#FFFFFFFF" />
+            <EditText
+                android:id="@+id/debug_edittext_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="50dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text=""
+                android:hint="Username"
+                android:textColorHint="#FF808080"
+                android:textColor="#FFFFFF" />
+            <EditText
+                android:id="@+id/debug_edittext_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="50dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text=""
+                android:hint="E-Mail"
+                android:textColorHint="#FF808080"
+                android:textColor="#FFFFFF" />
+            <EditText
+                android:id="@+id/debug_edittext_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="50dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text=""
+                android:hint="Passwort"
+                android:textColorHint="#FF808080"
+                android:textColor="#FFFFFF" />
+            <Button
+                android:id="@+id/debug_button_send_test_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Test-Request senden" />
+            <Button
+                android:id="@+id/debug_button_send_signup_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Registrierung senden" />
+            <Button
+                android:id="@+id/debug_button_send_login_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Login anfragen" />
+            <Button
+                android:id="@+id/debug_button_send_userdata_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Userdaten Laden" />
+            <Button
+                android:id="@+id/debug_button_send_highscores_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Highscores laden" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
