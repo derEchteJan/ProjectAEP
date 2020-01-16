@@ -4,14 +4,14 @@ import com.example.socketrocket.appengine.database.reflect.ReflectableObject;
 import java.lang.reflect.Field;
 import java.util.IllegalFormatException;
 
-public class ReflectableObjectHandler {
+class ReflectableObjectHandler {
 
-    private SQLiteHandle handle = null;
+    private SQLiteHandle handle;
 
 
     // MARK: - Methods
 
-    // MARK: External
+    // MARK: Setup
 
     protected void setHandle(SQLiteHandle handle) {
         this.handle = handle;
@@ -133,7 +133,7 @@ public class ReflectableObjectHandler {
         String[][] resultSet = this.handle.executeQueryRead(query);
         T[] objects = (T[])prototype.getArrayInstance(resultSet.length);
         if (resultSet.length < 1) {
-            return null;
+            return objects;
         } else {
             for (int n = 0; n < resultSet.length; n++) {
                 String[] result = resultSet[n];

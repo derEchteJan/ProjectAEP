@@ -1,7 +1,10 @@
 package com.example.socketrocket.appengine.networking;
 
+import android.app.Activity;
+
 import com.example.socketrocket.appengine.BackgroundTaskHandler;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,43 +40,45 @@ public class NetworkController {
     protected int generateRequest(NetworkRequestDelegate caller, String path, String httpMethod, String[][] headers, String payload) {
         if (caller == null) return NetworkRequestDelegate.INVALID_REQUEST_ID;
         int newRequestId = generateRequestId();
-        URL url = null;
+        URL url;
         try {
             url = new URL(BASE_URL + path);
         } catch (MalformedURLException e) {
             return NetworkRequestDelegate.INVALID_REQUEST_ID;
         }
         String[][] cleanedHeaders = cleanHeaders(headers);
-        //NetworkRequestTask requestTask = new NetworkRequestTask(caller, newRequestId, url, httpMethod, cleanedHeaders, payload);
-        //new Thread(requestTask).start();
         this.startRequestTaskThread(caller, newRequestId,url, httpMethod, cleanedHeaders, payload);
         return newRequestId;
     }
 
-    protected void forwardDidRecieveResponse(NetworkRequestDelegate caller, int requestId, String response) {
-        final NetworkRequestDelegate safeHandle = caller;
-        final int safeRequestId = requestId;
-        try {
-            final JSONObject json = new JSONObject(response);
-            safeHandle.runOnUiThread(new Runnable(){
-                public void run(){
-                    safeHandle.didRecieveNetworkResponse(safeRequestId, json);
+    protected void forwardDidRecieveResponse(final NetworkRequestDelegate caller, final int requestId, final String response) {
+        final Activity contextOfCaller = (Activity) caller;
+        final JSONObject[] results = this.parseResponse(response);
+        if(results != null) {
+            contextOfCaller.runOnUiThread(new Runnable() {
+                public void run() {
+                    caller.didRecieveNetworkResponse(requestId, results);
                 }
             });
-        } catch (JSONException e) {
-            // json parsing error
+        } else { // parsing error
             // TODO: Fehler loggen
-            safeHandle.runOnUiThread(new Runnable(){
+            contextOfCaller.runOnUiThread(new Runnable(){
                 public void run(){
-                    safeHandle.didRecieveNetworkError(safeRequestId, NetworkErrorType.badResponse);
+                    caller.didRecieveNetworkError(requestId, NetworkErrorType.badResponse);
                 }
             });
         }
     }
 
-    protected void forwardDidRecieveError(NetworkRequestDelegate caller, int requestId, NetworkErrorType error) {
+    protected void forwardDidRecieveError(final NetworkRequestDelegate caller, final int requestId, final NetworkErrorType error) {
         // TODO: Fehler loggen
-        caller.didRecieveNetworkError(requestId, error);
+        final Activity contextOfCaller = (Activity) caller;
+        contextOfCaller.runOnUiThread(new Runnable(){
+            public void run(){
+                caller.didRecieveNetworkError(requestId, error);
+            }
+        });
+
     }
 
     // MARK: - subs
@@ -132,6 +137,24 @@ public class NetworkController {
             cleanedHeaders[entryCount + 1][0] = "token";
             cleanedHeaders[entryCount + 1][1] = "value";
             return cleanedHeaders;
+        }
+    }
+
+    private JSONObject[] parseResponse(String rawData) {
+        try {
+            JSONObject singleObject = new JSONObject(rawData);
+            return new JSONObject[] {singleObject};
+        } catch(JSONException e1) {
+            try {
+                JSONArray jsonArray = new JSONArray(rawData);
+                JSONObject[] results = new JSONObject[jsonArray.length()];
+                for(int i = 0; i < jsonArray.length(); i++) {
+                    results[i] = jsonArray.getJSONObject(i);
+                }
+                return results;
+            } catch(JSONException e2) {
+                return null;
+            }
         }
     }
 

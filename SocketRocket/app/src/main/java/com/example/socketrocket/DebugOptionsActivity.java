@@ -2,24 +2,31 @@ package com.example.socketrocket;
 
 import android.app.Activity;
 
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Debug;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.socketrocket.appengine.database.DatabaseConnection;
-import com.example.socketrocket.appengine.database.DatabaseController;
+import com.example.socketrocket.appengine.database.reflect.objects.Score;
+import com.example.socketrocket.appengine.database.reflect.objects.Setting;
+import com.example.socketrocket.appengine.database.reflect.objects.User;
 import com.example.socketrocket.appengine.networking.NetworkConnection;
 import com.example.socketrocket.appengine.networking.NetworkErrorType;
 import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
 
 import org.json.JSONObject;
 
-public class DebugOptionsActivity extends Activity implements View.OnClickListener {
+public class DebugOptionsActivity extends Activity implements View.OnClickListener, NetworkRequestDelegate {
 
     private DatabaseConnection dbHandle;
+    private int currentRequestId = NetworkRequestDelegate.INVALID_REQUEST_ID;
+    private EditText textFieldUsername, textFieldEmail, textFieldPassword;
 
     // MARK: - Lifecycle
 
@@ -37,12 +44,27 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
     // MARK: - Initialization
 
     private void initViews() {
-        this.findViewById(R.id.button_main_menu).setOnClickListener(this);
-        this.findViewById(R.id.button_reinit_db).setOnClickListener(this);
-        this.findViewById(R.id.button_delete_db).setOnClickListener(this);
-        this.findViewById(R.id.button_info_db).setOnClickListener(this);
-        this.findViewById(R.id.button_populate_db).setOnClickListener(this);
-        this.findViewById(R.id.switch_debug_mode).setOnClickListener(this);
+        // navigation
+        this.findViewById(R.id.debug_button_back).setOnClickListener(this);
+        // datenbank
+        this.findViewById(R.id.debug_button_reinit_db).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_delete_db).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_print_db_info).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_print_user_data).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_print_highscore_data).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_print_settings_data).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_populate_db).setOnClickListener(this);
+        // netzwerk
+        this.findViewById(R.id.debug_button_send_test_request).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_send_signup_request).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_send_login_request).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_send_userdata_request).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_send_highscores_request).setOnClickListener(this);
+        // netzwerk - user template
+        this.textFieldUsername = this.findViewById(R.id.debug_edittext_username);
+        this.textFieldEmail = this.findViewById(R.id.debug_edittext_email);
+        this.textFieldPassword = this.findViewById(R.id.debug_edittext_password);
+        this.textFieldUsername.setDefaultFocusHighlightEnabled(false);
     }
 
 
@@ -51,32 +73,53 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button_main_menu: this.onMainMenuPressed(); break;
-            case R.id.button_reinit_db: this.onReinitDBPressed(); break;
-            case R.id.button_delete_db: this.onDeleteDBPressed(); break;
-            case R.id.button_info_db: this.onDBInfoPressed(); break;
-            //case R.id.button_populate_db: this.onPopulateDBPressed(); break;
+            // navigation
+            case R.id.debug_button_back: this.onMainMenuPressed(); break;
+            // datenbank
+            case R.id.debug_button_reinit_db: this.onReinitDBPressed(); break;
+            case R.id.debug_button_delete_db: this.onDeleteDBPressed(); break;
+            case R.id.debug_button_print_db_info: this.onDBInfoPressed(); break;
+            case R.id.debug_button_print_user_data: this.onPrintUserDataPressed(); break;
+            case R.id.debug_button_print_highscore_data: this.onPrintHighscoreDataPressed(); break;
+            case R.id.debug_button_print_settings_data: this.onPrintSettingsDataPressed(); break;
+            case R.id.debug_button_populate_db: this.onPopulateDBPressed(); break;
+            // netzwerk
+            case R.id.debug_button_send_test_request: this.onSendTestRequestPressed(); break;
+            case R.id.debug_button_send_signup_request: this.onSendSignupRequestPressed(); break;
+            case R.id.debug_button_send_login_request: this.onSendLoginRequestPressed(); break;
+            case R.id.debug_button_send_userdata_request: this.onSendUserDataRequestPressed(); break;
+            case R.id.debug_button_send_highscores_request: this.onSendHighscoresRequestPressed(); break;
+            // sonstige
             default:
-                Toast.makeText(this, "Action not implemented", Toast.LENGTH_LONG).show();
-                break;
+                Toast.makeText(this, "Action not implemented", Toast.LENGTH_LONG).show(); break;
         }
     }
 
-    // MARK: - Buttons
+    // MARK: - Button Actions
+
+    // Navigation
 
     private void onMainMenuPressed() {
         this.finish();
     }
 
+    // Datenbank
+
     private void onReinitDBPressed() {
         this.dbHandle = new DatabaseConnection(this);
+        Toast.makeText(this, "Datenbank neu angelegt", Toast.LENGTH_LONG).show();
     }
 
     private void onDeleteDBPressed() {
-        boolean success = this.dbHandle.deleteDatabase();
-        String result = success ? "Deleted Database" : "File not found";
-        System.out.println(result);
-        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                boolean success = dbHandle.deleteDatabase();
+                String result = success ? "Deleted Database" : "Database could not be deleted";
+                System.out.println(result);
+                Toast.makeText(DebugOptionsActivity.this, result, Toast.LENGTH_LONG).show();
+            }
+        };
+        this.showSendRequestPrompt("Delete Database?", databaseTask);
     }
 
     private void onDBInfoPressed() {
@@ -92,7 +135,184 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         Toast.makeText(this, result, Toast.LENGTH_LONG).show();
     }
 
-    private void onPopulateDBPressed() {
+    private void onPrintUserDataPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                User[] results = dbHandle.getAllUsers();
+                String result;
+                if (results.length > 0) {
+                    result = "Users:";
+                    for (User user : results) result += "\n" + user.toString();
+                } else {
+                    result = "Keine Users vorhanden";
+                }
+                Toast.makeText(DebugOptionsActivity.this, result, Toast.LENGTH_LONG).show();
+            }
+        };
+        this.showSendRequestPrompt("Print all User Objects?", databaseTask);
+    }
 
+    private void onPrintHighscoreDataPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                Score[] results = dbHandle.getAllScores();
+                String result;
+                if(results.length > 0) {
+                    result = "Scores:";
+                    for(Score score: results) result += "\n" + score.toString();
+                } else {
+                    result = "Keine Scores vorhanden";
+                }
+                Toast.makeText(DebugOptionsActivity.this, result, Toast.LENGTH_LONG).show();
+            }
+        };
+        this.showSendRequestPrompt("Print all Score Objects?", databaseTask);
+    }
+
+    private void onPrintSettingsDataPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                Setting[] results = dbHandle.getAllSettings();
+                String result;
+                if(results.length > 0) {
+                    result = "Settings:";
+                    for(Setting setting: results) result += "\n" + setting.toString();
+                } else {
+                    result = "Keine Settings vorhanden";
+                }
+                Toast.makeText(DebugOptionsActivity.this, result, Toast.LENGTH_LONG).show();
+            }
+        };
+        this.showSendRequestPrompt("Print all Settings Objects?", databaseTask);
+    }
+
+    private void onPopulateDBPressed() {
+        // TODO: Datenbank besiedeln
+    }
+
+
+    // Netzwerk
+
+    private void onSendTestRequestPressed() {
+        Runnable networkTask = new Runnable() {
+            public void run() {
+                currentRequestId = NetworkConnection.sendTestRequest(DebugOptionsActivity.this);
+                if(currentRequestId != NetworkRequestDelegate.INVALID_REQUEST_ID)
+                    setNetworkButtonsLocked(true);
+            }
+        };
+        this.showSendRequestPrompt("Test Anfrage senden?", networkTask);
+    }
+
+    private void onSendSignupRequestPressed() {
+        final String username = this.textFieldUsername.getText().toString();
+        final String email = this.textFieldEmail.getText().toString();
+        final String password = this.textFieldPassword.getText().toString();
+        Runnable networkTask = new Runnable() {
+            public void run() {
+                currentRequestId = NetworkConnection.sendSignUpRequest(DebugOptionsActivity.this, username, email, password);
+                if(currentRequestId != NetworkRequestDelegate.INVALID_REQUEST_ID)
+                    setNetworkButtonsLocked(true);
+            }
+        };
+        String title = "Registrierung durchführen?";
+        title += "\nusername: "+username+",";
+        title += "\nemail: "+email+",";
+        title += "\npasswort: "+password+"";
+        this.showSendRequestPrompt(title, networkTask);
+    }
+
+    private void onSendLoginRequestPressed() {
+        final String username = this.textFieldUsername.getText().toString();
+        final String password = this.textFieldPassword.getText().toString();
+        Runnable networkTask = new Runnable() {
+            public void run() {
+                currentRequestId = NetworkConnection.sendLoginRequest(DebugOptionsActivity.this, username, password);
+                if(currentRequestId != NetworkRequestDelegate.INVALID_REQUEST_ID)
+                    setNetworkButtonsLocked(true);
+            }
+        };
+        String title = "Login durchführen?";
+        title += "\nusername: "+username+",";
+        title += "\npasswort: "+password+"";
+        this.showSendRequestPrompt(title, networkTask);
+    }
+
+    private void onSendUserDataRequestPressed() {
+        Runnable networkTask = new Runnable() {
+            public void run() {
+                currentRequestId = NetworkConnection.sendLoadUserDataRequest(DebugOptionsActivity.this);
+                if(currentRequestId != NetworkRequestDelegate.INVALID_REQUEST_ID)
+                    setNetworkButtonsLocked(true);
+            }
+        };
+        String title = "Userdaten laden?";
+        this.showSendRequestPrompt(title, networkTask);
+    }
+
+    private void onSendHighscoresRequestPressed() {
+        Runnable networkTask = new Runnable() {
+            public void run() {
+                currentRequestId = NetworkConnection.sendLoadHighscoresRequest(DebugOptionsActivity.this);
+                if(currentRequestId != NetworkRequestDelegate.INVALID_REQUEST_ID)
+                    setNetworkButtonsLocked(true);
+            }
+        };
+        String title = "Highscores laden?";
+        this.showSendRequestPrompt(title, networkTask);
+    }
+
+    // Lock Buttons
+
+    private void setNetworkButtonsLocked(boolean locked) {
+        this.findViewById(R.id.debug_button_send_test_request).setEnabled(!locked);
+        this.findViewById(R.id.debug_button_send_signup_request).setEnabled(!locked);
+        this.findViewById(R.id.debug_button_send_login_request).setEnabled(!locked);
+        this.findViewById(R.id.debug_button_send_userdata_request).setEnabled(!locked);
+        this.findViewById(R.id.debug_button_send_highscores_request).setEnabled(!locked);
+    }
+
+
+    // MARK: - Netzwerk senden Alert
+
+    private void showSendRequestPrompt(final String message, final Runnable onContinue) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setPositiveButton("yes",
+                new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface arg0, int arg1) {
+                        onContinue.run();
+                    }
+                }
+        );
+        alertDialogBuilder.setNegativeButton("No", null);
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+
+    // MARK: - interface NetworkRequestDelegate
+
+    @Override
+    public void didRecieveNetworkResponse(int requestId, JSONObject[] data) {
+        String result;
+        if(data.length > 0) {
+            result = "Recieved:";
+            for(JSONObject object: data) result += "\n" + object.toString();
+        }
+        else result = "Recieved empty response";
+        System.out.println(result);
+        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+        this.setNetworkButtonsLocked(false);
+        this.currentRequestId = NetworkRequestDelegate.INVALID_REQUEST_ID;
+    }
+
+    @Override
+    public void didRecieveNetworkError(int requestId, NetworkErrorType errorType) {
+        String result = "Network error: " + errorType.toString();
+        System.out.println(result);
+        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+        this.setNetworkButtonsLocked(false);
+        this.currentRequestId = NetworkRequestDelegate.INVALID_REQUEST_ID;
     }
 }

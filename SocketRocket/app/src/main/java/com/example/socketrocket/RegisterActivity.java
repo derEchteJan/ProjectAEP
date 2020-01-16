@@ -23,7 +23,7 @@ import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
 
 import org.json.JSONObject;
 
-public class RegisterActivity extends NetworkRequestDelegate implements View.OnClickListener {
+public class RegisterActivity extends Activity implements View.OnClickListener, NetworkRequestDelegate {
 
     private EditText usernameInput, emailInput, passwordInput, confirmPasswordInput;
     private Button signUpButton;
@@ -48,7 +48,7 @@ public class RegisterActivity extends NetworkRequestDelegate implements View.OnC
         this.signUpButton = this.findViewById(R.id.register_button_signUp);
         this.signUpButton.setOnClickListener(this);
         this.usernameInput.setText("username");
-        this.emailInput.setText("username");
+        this.emailInput.setText("user@example.com");
         this.passwordInput.setText("username");
         this.confirmPasswordInput.setText("username");
     }
@@ -73,8 +73,10 @@ public class RegisterActivity extends NetworkRequestDelegate implements View.OnC
             } else if(!this.checkEmail(email)){
                 // email enthält kein "@" --> textfeld wird gelöscht
                 this.usernameInput.getText().clear();
+                this.showInvalidEmail();
             }else {
                 int requestId = NetworkConnection.sendRegistrationRequest(this, "email", username, password);
+                this.currentRequestId = requestId;
                 if(requestId == NetworkRequestDelegate.INVALID_REQUEST_ID) {
                     this.currentRequestId = requestId;
                     this.showNetworkError(null);
@@ -116,6 +118,11 @@ public class RegisterActivity extends NetworkRequestDelegate implements View.OnC
         Toast.makeText(this, "Invalid Username!", Toast.LENGTH_LONG).show();
     }
 
+    private void showInvalidEmail(){
+        // TODO: umsetzen
+        Toast.makeText(this, "Invalid EMail, must contain @!", Toast.LENGTH_LONG).show();
+    }
+
     private void showNetworkError(NetworkErrorType errorType) {
         // TODO: umsetzen
         System.out.println("Netzwerkfehler! "+errorType.toString());
@@ -137,14 +144,14 @@ public class RegisterActivity extends NetworkRequestDelegate implements View.OnC
     // MARK: - NetworkRequestDelegate
 
     @Override
-    public void didRecieveNetworkResponse(int requestId, JSONObject data) {
+    public void didRecieveNetworkResponse(int requestId, JSONObject[] data) {
         if(requestId == NetworkRequestDelegate.INVALID_REQUEST_ID || requestId != this.currentRequestId) {
             return; // falsche request id
         }
         // TODO: umsetzen
         // TODO: "token" vom json auslesen, in der DB Speichern
         System.out.println("erfolgreich registriert.");
-        if(this.handleResponse(data)){
+        if(this.handleResponse(data[0])){
             this.showSignUpSuccess();
         } else {
             this.showInternalError();
