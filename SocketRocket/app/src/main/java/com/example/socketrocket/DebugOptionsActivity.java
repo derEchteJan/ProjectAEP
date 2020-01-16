@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Debug;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -12,8 +13,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.socketrocket.appengine.database.DatabaseConnection;
+import com.example.socketrocket.appengine.database.reflect.objects.Score;
+import com.example.socketrocket.appengine.database.reflect.objects.Setting;
+import com.example.socketrocket.appengine.database.reflect.objects.User;
 import com.example.socketrocket.appengine.networking.NetworkConnection;
-import com.example.socketrocket.appengine.networking.NetworkController;
 import com.example.socketrocket.appengine.networking.NetworkErrorType;
 import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
 
@@ -47,8 +50,10 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         this.findViewById(R.id.debug_button_reinit_db).setOnClickListener(this);
         this.findViewById(R.id.debug_button_delete_db).setOnClickListener(this);
         this.findViewById(R.id.debug_button_print_db_info).setOnClickListener(this);
-        this.findViewById(R.id.debug_button_populate_db).setOnClickListener(this);
         this.findViewById(R.id.debug_button_print_user_data).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_print_highscore_data).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_print_settings_data).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_populate_db).setOnClickListener(this);
         // netzwerk
         this.findViewById(R.id.debug_button_send_test_request).setOnClickListener(this);
         this.findViewById(R.id.debug_button_send_signup_request).setOnClickListener(this);
@@ -74,8 +79,10 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
             case R.id.debug_button_reinit_db: this.onReinitDBPressed(); break;
             case R.id.debug_button_delete_db: this.onDeleteDBPressed(); break;
             case R.id.debug_button_print_db_info: this.onDBInfoPressed(); break;
-            case R.id.debug_button_populate_db: this.onPopulateDBPressed(); break;
             case R.id.debug_button_print_user_data: this.onPrintUserDataPressed(); break;
+            case R.id.debug_button_print_highscore_data: this.onPrintHighscoreDataPressed(); break;
+            case R.id.debug_button_print_settings_data: this.onPrintSettingsDataPressed(); break;
+            case R.id.debug_button_populate_db: this.onPopulateDBPressed(); break;
             // netzwerk
             case R.id.debug_button_send_test_request: this.onSendTestRequestPressed(); break;
             case R.id.debug_button_send_signup_request: this.onSendSignupRequestPressed(); break;
@@ -100,13 +107,19 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
 
     private void onReinitDBPressed() {
         this.dbHandle = new DatabaseConnection(this);
+        Toast.makeText(this, "Datenbank neu angelegt", Toast.LENGTH_LONG).show();
     }
 
     private void onDeleteDBPressed() {
-        boolean success = this.dbHandle.deleteDatabase();
-        String result = success ? "Deleted Database" : "File not found";
-        System.out.println(result);
-        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                boolean success = dbHandle.deleteDatabase();
+                String result = success ? "Deleted Database" : "Database could not be deleted";
+                System.out.println(result);
+                Toast.makeText(DebugOptionsActivity.this, result, Toast.LENGTH_LONG).show();
+            }
+        };
+        this.showSendRequestPrompt("Delete Database?", databaseTask);
     }
 
     private void onDBInfoPressed() {
@@ -122,13 +135,61 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         Toast.makeText(this, result, Toast.LENGTH_LONG).show();
     }
 
-    private void onPopulateDBPressed() {
-        NetworkConnection.sendLoadHighscoresRequest(this);
-    }
-
     private void onPrintUserDataPressed() {
-
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                User[] results = dbHandle.getAllUsers();
+                String result;
+                if (results.length > 0) {
+                    result = "Users:";
+                    for (User user : results) result += "\n" + user.toString();
+                } else {
+                    result = "Keine Users vorhanden";
+                }
+                Toast.makeText(DebugOptionsActivity.this, result, Toast.LENGTH_LONG).show();
+            }
+        };
+        this.showSendRequestPrompt("Print all User Objects?", databaseTask);
     }
+
+    private void onPrintHighscoreDataPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                Score[] results = dbHandle.getAllScores();
+                String result;
+                if(results.length > 0) {
+                    result = "Scores:";
+                    for(Score score: results) result += "\n" + score.toString();
+                } else {
+                    result = "Keine Scores vorhanden";
+                }
+                Toast.makeText(DebugOptionsActivity.this, result, Toast.LENGTH_LONG).show();
+            }
+        };
+        this.showSendRequestPrompt("Print all Score Objects?", databaseTask);
+    }
+
+    private void onPrintSettingsDataPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                Setting[] results = dbHandle.getAllSettings();
+                String result;
+                if(results.length > 0) {
+                    result = "Settings:";
+                    for(Setting setting: results) result += "\n" + setting.toString();
+                } else {
+                    result = "Keine Settings vorhanden";
+                }
+                Toast.makeText(DebugOptionsActivity.this, result, Toast.LENGTH_LONG).show();
+            }
+        };
+        this.showSendRequestPrompt("Print all Settings Objects?", databaseTask);
+    }
+
+    private void onPopulateDBPressed() {
+        // TODO: Datenbank besiedeln
+    }
+
 
     // Netzwerk
 
