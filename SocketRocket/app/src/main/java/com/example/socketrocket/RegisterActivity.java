@@ -23,7 +23,7 @@ import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
 
 import org.json.JSONObject;
 
-public class RegisterActivity extends Activity implements View.OnClickListener, NetworkRequestDelegate {
+public class RegisterActivity extends NetworkRequestDelegate implements View.OnClickListener {
 
     private EditText usernameInput, emailInput, passwordInput, confirmPasswordInput;
     private Button signUpButton;
@@ -47,6 +47,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         this.confirmPasswordInput = this.findViewById(R.id.register_editText_confirm_password);
         this.signUpButton = this.findViewById(R.id.register_button_signUp);
         this.signUpButton.setOnClickListener(this);
+        this.usernameInput.setText("username");
+        this.emailInput.setText("username");
+        this.passwordInput.setText("username");
+        this.confirmPasswordInput.setText("username");
     }
 
     @Override

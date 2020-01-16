@@ -6,7 +6,8 @@ import com.example.socketrocket.appengine.networking.NetworkErrorType;
 
 import org.json.JSONObject;
 
-public interface NetworkRequestDelegate  {
+
+public abstract class NetworkRequestDelegate extends Activity {
 
     public static final int INVALID_REQUEST_ID = -1;
 

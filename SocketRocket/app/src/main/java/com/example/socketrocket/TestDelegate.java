@@ -9,7 +9,7 @@ import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
 
 import org.json.JSONObject;
 
-public class TestDelegate implements NetworkRequestDelegate {
+public class TestDelegate extends NetworkRequestDelegate {
 
     // Beispiel wie man die NetworkConnection benutzen kann wenn man NetworkRequestDelegate implementiert
 
