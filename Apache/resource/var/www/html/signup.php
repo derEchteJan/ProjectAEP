@@ -33,7 +33,7 @@ function validateData(User $user) {
 	$name_len = strlen($user->name);
 	$email_len = strlen($user->email);
 	$pw_len = strlen($user->password);
-	if($name_len<3||$name_len>30||$email_len<3||$email_len>30||$pw_len<3||$pw_len>30) {
+	if($name_len<3||$name_len>20||$email_len<5||$email_len>40||$pw_len!=32) {
 		http_response_code(400); 
 		echo "400 Bad Request";
 		exit(0);
@@ -83,7 +83,7 @@ $user->token = generateToken();
 $sql_statement = "INSERT INTO apache_db.t_User (name, email, password, token) VALUES ('"
 	.$user->name."', '"
 	.$user->email."', '"
-	.md5($user->password)."', '"
+	.$user->password."', '"
 	.$user->token."')";
 $db_conn->query($sql_statement);
 

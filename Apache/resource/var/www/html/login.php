@@ -27,7 +27,7 @@ function validateData(User $user) {
 	}
 	$name_len = strlen($user->name);
 	$pw_len = strlen($user->password);
-	if($name_len<3||$name_len>30||$pw_len<3||$pw_len>30) {
+	if($name_len<3||$name_len>20||$pw_len!=32) {
 		http_response_code(400); 
 		echo "400 Bad Request";
 		exit(0);
