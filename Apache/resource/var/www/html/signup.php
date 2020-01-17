@@ -42,8 +42,8 @@ function validateData(User $user) {
 
 function openMysqliConnection() {
 	$servername = "localhost";
-	$username = "apache";
-	$password = "admin";
+	$username = "apache_user";
+	$password = "apache2";
 	$connection = mysqli_connect($servername, $username, $password);
 	if($connection->connect_error) {
 		http_response_code(500);
