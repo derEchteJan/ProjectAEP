@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/btnTest"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_floating_material_dark">
+
+    <Button
+        android:id="@+id/button_main_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/abc_search_url_text_normal"
+        android:text="Zurück"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_reinit_db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Reinitialisieren"
+        app:layout_constraintStart_toStartOf="@id/button_main_menu"
+        app:layout_constraintTop_toBottomOf="@id/textView_db" />
+
+    <Button
+        android:id="@+id/button_delete_db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Löschen"
+        app:layout_constraintStart_toStartOf="@id/button_main_menu"
+        app:layout_constraintTop_toBottomOf="@+id/button_reinit_db" />
+
+    <TextView
+        android:id="@+id/textView_db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Datenbank"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@id/button_main_menu"
+        app:layout_constraintTop_toBottomOf="@+id/button_main_menu" />
+
+    <Button
+        android:id="@+id/button_info_db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Info printen"
+        app:layout_constraintStart_toStartOf="@id/button_main_menu"
+        app:layout_constraintTop_toBottomOf="@+id/button_delete_db" />
+
+    <Button
+        android:id="@+id/button_populate_db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Dummy Daten einfügen"
+        app:layout_constraintStart_toStartOf="@id/button_main_menu"
+        app:layout_constraintTop_toBottomOf="@+id/button_info_db" />
+
+    <TextView
+        android:id="@+id/textView_others"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Sonstiges"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@id/button_main_menu"
+        app:layout_constraintTop_toBottomOf="@+id/button_populate_db" />
+
+    <Switch
+        android:id="@+id/switch_debug_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Debug Modus"
+        android:textColor="@android:color/white"
+        android:textSize="18dp"
+        android:thumbTint="@color/abc_search_url_text_normal"
+        android:trackTint="@color/abc_search_url_text_normal"
+        app:layout_constraintStart_toStartOf="@id/button_main_menu"
+        app:layout_constraintTop_toBottomOf="@+id/textView_others"
+        tools:trackTintMode="add" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

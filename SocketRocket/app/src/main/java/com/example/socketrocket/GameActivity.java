@@ -5,16 +5,15 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.example.socketrocket.game.GameConstants;
+import com.example.socketrocket.gameengine.GamePanel;
 
-public class MainActivity extends Activity {
+public class GameActivity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("Display metrics: w = "+ GameConstants.SCREEN_W+", h = "+GameConstants.SCREEN_H);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.setContentView(new GamePanel(this));
+        this.setContentView(new GamePanel(this, this));
     }
 }
