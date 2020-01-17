@@ -47,11 +47,6 @@ function openMysqliConnection() {
 	return $connection;
 }
 
-/*function generateToken() {
-	return md5(rand()."");
-}*/
-
-
 
 // REQUEST HANDLING
 
@@ -63,34 +58,25 @@ validateData($user);
 
 $db_conn = openMysqliConnection();
 
-// check if username is taken
+// check if user exists
 $sql_statement = "SELECT email, token FROM apache_db.t_User WHERE name = '".$user->name."' AND password = '".$user->password."'";
 $sql_results = $db_conn->query($sql_statement);
 if ($sql_results->num_rows == 1) {
-	while($row = $result->fetch_assoc()) {
+	while($row = $sql_results->fetch_assoc()) {
 		$user->email = $row["email"];
 		$user->token = $row["token"];
 	}
 } else {
 	http_response_code(403);
 	echo "403 Forbidden: Credentials invalid";
-	exit(0);	
+	exit(0);
 }
 
-/*
-$user->token = generateToken();
-$sql_statement = "INSERT INTO apache_db.t_User (name, email, password, token) VALUES ('"
-	.$user->name."', '"
-	.$user->email."', '"
-	.md5($user->password)."', '"
-	.$user->token."')";
-$db_conn->query($sql_statement);
-*/
 // DONE AND CLOSE
 
 $db_conn->close();
 
-// respond with new token
+// respond with complete user
 echo json_encode($user);
 
 exit(0);
