@@ -21,6 +21,7 @@ import com.example.socketrocket.appengine.networking.NetworkConnection;
 import com.example.socketrocket.appengine.networking.NetworkErrorType;
 import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RegisterActivity extends Activity implements View.OnClickListener, NetworkRequestDelegate {
@@ -145,9 +146,17 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
 
     @Override
     public void didRecieveNetworkResponse(int requestId, JSONObject[] data) {
-        if(requestId == NetworkRequestDelegate.INVALID_REQUEST_ID || requestId != this.currentRequestId) {
+        if(requestId == NetworkRequestDelegate.INVALID_REQUEST_ID || requestId != this.currentRequestId || data.length < 1) {
             return; // falsche request id
         }
+        JSONObject tokenObject = data[0];
+        String token;
+        try {
+            token = (String) tokenObject.get("token");
+        } catch(Exception e) {
+            Toast.makeText(this, "Datenbank Zugriff fehlgeschlagen!", Toast.LENGTH_LONG).show();
+        }
+
         // TODO: umsetzen
         // TODO: "token" vom json auslesen, in der DB Speichern
         System.out.println("erfolgreich registriert.");
@@ -180,6 +189,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
             // TODO: wenn response ungültig ist
             return false;
         }
+    }
+
+    private void setNetworkButtonsLocked(boolean locked) {
+        this.findViewById(R.id.register_button_signUp).setEnabled(!locked);
     }
 
 }
