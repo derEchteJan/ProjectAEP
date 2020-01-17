@@ -2,6 +2,10 @@
 
 * * *
 
+[Hier gehts zum Server <3](http://janspi/ "zum Server")
+
+* * *
+
 Verzeichnisstrucktur:
 * ProjectAEP
   * Apache
