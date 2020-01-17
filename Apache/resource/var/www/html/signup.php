@@ -70,7 +70,7 @@ validateData($user);
 $db_conn = openMysqliConnection();
 
 // check if username is taken
-$sql_statement = "SELECT name FROM apache_db.t_User WHERE name = '".$user->name."'";
+$sql_statement = "SELECT name FROM db_apache.t_user WHERE name = '".$user->name."'";
 $sql_results = $db_conn->query($sql_statement);
 if ($sql_results->num_rows >= 1) {
 	http_response_code(409);
@@ -80,7 +80,7 @@ if ($sql_results->num_rows >= 1) {
 
 // if not -> insert new user
 $user->token = generateToken();
-$sql_statement = "INSERT INTO apache_db.t_User (name, email, password, token) VALUES ('"
+$sql_statement = "INSERT INTO db_apache.t_user (name, email, password, token) VALUES ('"
 	.$user->name."', '"
 	.$user->email."', '"
 	.$user->password."', '"

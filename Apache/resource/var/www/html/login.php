@@ -59,7 +59,7 @@ validateData($user);
 $db_conn = openMysqliConnection();
 
 // check if user exists
-$sql_statement = "SELECT email, token FROM apache_db.t_User WHERE name = '".$user->name."' AND password = '".$user->password."'";
+$sql_statement = "SELECT email, token FROM db_apache.t_user WHERE name = '".$user->name."' AND password = '".$user->password."'";
 $sql_results = $db_conn->query($sql_statement);
 if ($sql_results->num_rows == 1) {
 	while($row = $sql_results->fetch_assoc()) {
