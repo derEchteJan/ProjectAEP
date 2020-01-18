@@ -5,30 +5,26 @@ import com.example.socketrocket.appengine.database.reflect.objects.*;
 
 public class DatabaseConnection {
 
-    private static final DatabaseConnection instance = new DatabaseConnection();
-    public static DatabaseConnection sharedInstance() {
-        return instance;
-    }
+    private final DatabaseController controller;
 
-    private DatabaseConnection() {}
+    public DatabaseConnection(Context context) {
+        this.controller = new DatabaseController();
+        this.controller.initWithContext(context);
+    }
 
 
     // MARK: - Methods
 
-    public void initDatabase(Context context) {
-        DatabaseController.sharedInstance().initDatabase(context);
-    }
-
     public boolean deleteDatabase() {
-        return DatabaseController.sharedInstance().deleteDatabase();
+        return this.controller.deleteDatabase();
     }
 
     public String getDatabasePath() {
-        return DatabaseController.sharedInstance().getDatabasePath();
+        return this.controller.getDatabasePath();
     }
 
     public long getDatabaseSize() {
-        return DatabaseController.sharedInstance().getDatabaseSize();
+        return this.controller.getDatabaseSize();
     }
 
 
@@ -37,79 +33,79 @@ public class DatabaseConnection {
     // MARK: Score
 
     public void addScore(Score score) {
-        DatabaseController.sharedInstance().addScore(score);
+        this.controller.addScore(score);
     }
 
     public Score getScore(int id) {
-        return DatabaseController.sharedInstance().getScore(id);
+        return this.controller.getScore(id);
     }
 
     public Score[] getAllScores() {
-        return DatabaseController.sharedInstance().getAllScores();
+        return this.controller.getAllScores();
     }
 
     public void updateScore(Score score) {
-        DatabaseController.sharedInstance().updateScore(score);
+        this.controller.updateScore(score);
     }
 
     public void deleteScore(Score score) {
-        DatabaseController.sharedInstance().deleteScore(score);
+        this.controller.deleteScore(score);
     }
 
     public void deleteAllScores() {
-        DatabaseController.sharedInstance().deleteAllScores();
+        this.controller.deleteAllScores();
     }
 
     // MARK: User
 
     public void addUser(User user) {
-        DatabaseController.sharedInstance().addUser(user);
+        this.controller.addUser(user);
     }
 
     public User getUser(int id) {
-        return DatabaseController.sharedInstance().getUser(id);
+        return this.controller.getUser(id);
     }
 
     public User[] getAllUsers() {
-        return DatabaseController.sharedInstance().getAllUsers();
+        return this.controller.getAllUsers();
     }
 
     public void updateUser(User user) {
-        DatabaseController.sharedInstance().updateUser(user);
+        this.controller.updateUser(user);
     }
 
     public void deleteUser(User user) {
-        DatabaseController.sharedInstance().deleteUser(user);
+        this.controller.deleteUser(user);
     }
 
     public void deleteAllUsers() {
-        DatabaseController.sharedInstance().deleteAllUsers();
+        this.controller.deleteAllUsers();
     }
 
     // MARK: Setting
 
     public void addSetting(Setting setting) {
-        DatabaseController.sharedInstance().addSetting(setting);
+        this.controller.addSetting(setting);
     }
 
     public Setting getSetting(int id) {
-        return DatabaseController.sharedInstance().getSetting(id);
+        return this.controller.getSetting(id);
     }
 
     public Setting[] getAllSettings() {
-        return DatabaseController.sharedInstance().getAllSettings();
+        return this.controller.getAllSettings();
     }
 
     public void updateSetting(Setting setting) {
-        DatabaseController.sharedInstance().updateSetting(setting);
+        this.controller.updateSetting(setting);
     }
 
     public void deleteSetting(Setting setting) {
-        DatabaseController.sharedInstance().deleteSetting(setting);
+        this.controller.deleteSetting(setting);
     }
 
     public void deleteAllSettings() {
-        DatabaseController.sharedInstance().deleteAllSettings();
+        this.controller.deleteAllSettings();
     }
 
 }

@@ -4,11 +4,9 @@ import com.example.socketrocket.appengine.database.reflect.ReflectableObject;
 
 public class User extends ReflectableObject {
 
-    public long userId;
     public String name;
     public String email;
     public String password;
-    public String salt;
     public String token;
 
 

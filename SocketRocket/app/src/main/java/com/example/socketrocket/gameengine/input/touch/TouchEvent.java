@@ -4,7 +4,7 @@ import android.graphics.Rect;
 
 public class TouchEvent {
 
-    public static enum Action {
+    public enum Action {
         UP, DOWN, MOVE;
     }
 

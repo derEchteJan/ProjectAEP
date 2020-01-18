@@ -12,32 +12,27 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class DatabaseController {
+class DatabaseController {
 
     protected static final int DATABASE_VERSION = 1;
     protected static final String APP_DB_PATH = "main.db";
 
-    private static final DatabaseController thisInstance = new DatabaseController();
-    protected static DatabaseController sharedInstance() { return thisInstance; }
-
-    private DatabaseController() {}
+    protected DatabaseController() {}
 
     private ReflectableObjectHandler mainObjectHandler = null;
     private SQLiteHandle mainDBhandle = null;
-    private Context context = null;
 
     // MARK: - External
 
     // Management
 
-    protected void initDatabase(Context context) {
+    protected void initWithContext(Context context) {
         /* TODO: Datenbank initialisieren bei jedem Appstart
          *  - Wenn datei nicht da -> neu erzeugen
          *  - Tabellen ersetellen falls nötig
          *  - Migration durchführen
          *  - Bei fehlern löschen und neu aufsetzen
          * */
-        this.context = context;
         this.mainDBhandle = new SQLiteHandle(context, APP_DB_PATH, DATABASE_VERSION);
         this.mainObjectHandler = new ReflectableObjectHandler();
         this.mainObjectHandler.setHandle(this.mainDBhandle);
@@ -68,7 +63,7 @@ public class DatabaseController {
     protected long getDatabaseSize() {
         if (this.mainDBhandle == null) return 0;
         String path = this.mainDBhandle.getDatabasePath();
-        int available = 0;
+        int available;
         try {
             InputStream fileStream = new FileInputStream(path);
             available = fileStream.available();
