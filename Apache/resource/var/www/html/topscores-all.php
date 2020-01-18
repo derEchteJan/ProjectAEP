@@ -2,39 +2,33 @@
 
 // MODELS
 
+$max_results = 10;
+
 class User {
 	public $id = "";
-	public $name = "";
 	public $token = "";
 }
 
 class Score {
-	public $user_id = "";
 	public $user_name = "";
 	public $amount = "";
 	public $timestamp = "";
-	public $token = "";
 }
 
 // FUNCTIONS
 
 function parseRequest($body) {
-	$result = new Score();
-	$json = json_decode($body, true);
-	$result->amount = $json['amount'];
-	$result->timestamp = $json['timestamp'];
+	$result = new User();
 	$result->token = $_SERVER[HTTP_TOKEN];
 	return $result;
 }
 
-function validateData(Score $score) {
-	if($score->amount==null||$score->timestamp==null||$score->token==null) {
+function validateData(User $user) {
+	if($user->token==null/* or no integer */) {
 		http_response_code(400); 
 		echo "400 Bad Request";
 		exit(0);
 	}
-	// todo: input auf integer prüfen
-	//var_dump($score-token);
 }
 
 function openMysqliConnection() {
@@ -53,46 +47,53 @@ function openMysqliConnection() {
 
 // REQUEST HANDLING
 
-$request_body = file_get_contents('php://input');
-$score = parseRequest($request_body);
-//echo json_encode($score);
-validateData($score);
+//$request_body = file_get_contents('php://input');
+//$user = parseRequest($request_body);
+//echo json_encode($user);
+//validateData($user);
 
 // QUERY DATABASE
 
 $db_conn = openMysqliConnection();
 
+/*
 // check if token valid -> get user
-$sql_statement = "SELECT pk_id, name FROM db_apache.t_user WHERE token = '".$score->token."'";
+$sql_statement = "SELECT pk_id FROM db_apache.t_user WHERE token = '".$user->token."'";
 $sql_results = $db_conn->query($sql_statement);
-if ($sql_results->num_rows == 1) {
+if ($sql_results->num_rows > 0) {
 	while($row = $sql_results->fetch_assoc()) {
-		$score->user_id = $row["pk_id"];
-		$score->user_name = $row["name"];
+		$user->id = $row["pk_id"];
 	}
 } else {
 	http_response_code(403);
 	echo "403 Forbidden: Credentials invalid";
 	exit(0);
-}
-// insert the new score
-$sql_statement = "INSERT INTO db_apache.t_score (fk_user_id, user_name, amount, timestamp) VALUES ("
-	.$score->user_id.", '"
-	.$score->user_name."', "
-	.$score->amount.", "
-	.$score->timestamp.")";
+}*/
+
+// get top scores
+$sql_statement = "SELECT user_name, amount, timestamp FROM db_apache.t_score ORDER BY amount DESC LIMIT ".$max_results;
 $sql_results = $db_conn->query($sql_statement);
-if(mysqli_affected_rows($db_conn) < 1) {
-	http_response_code(500);
-	echo "500 Server Error: Database";
+$result_arr = array();
+if($sql_results->num_rows > 0) {
+	while($row = $sql_results->fetch_assoc()) {
+		$rowScore = new Score();
+		$rowScore->user_name = $row["user_name"];
+		$rowScore->amount = $row["amount"];
+		$rowScore->timestamp = $row["timestamp"];
+		array_push($result_arr, $rowScore);
+	}
+} /*else {
+	http_response_code(404);
+	echo "404 Not Found: no scores found for user_id ".$user->id;
 	exit(0);
-};
+};*/
+
 // DONE AND CLOSE
 
 $db_conn->close();
 
 // respond with complete user
-echo "create score: success";
+echo json_encode($result_arr);
 
 exit(0);
 
