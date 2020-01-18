@@ -47,6 +47,10 @@ function openMysqliConnection() {
 	return $connection;
 }
 
+function generateToken() {
+	return md5(rand()."");
+}
+
 
 // REQUEST HANDLING
 
@@ -64,13 +68,17 @@ $sql_results = $db_conn->query($sql_statement);
 if ($sql_results->num_rows == 1) {
 	while($row = $sql_results->fetch_assoc()) {
 		$user->email = $row["email"];
-		$user->token = $row["token"];
+		//$user->token = $row["token"];
 	}
 } else {
 	http_response_code(403);
 	echo "403 Forbidden: Credentials invalid";
 	exit(0);
 }
+// set new token for user
+$user->token = generateToken();
+$sql_statement = "UPDATE db_apache.t_user SET token = '".$user->token."' WHERE name = '".$user->name."'";
+$sql_results = $db_conn->query($sql_statement);
 
 // DONE AND CLOSE
 
