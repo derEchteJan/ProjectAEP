@@ -5,13 +5,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Debug;
+import java.security.MessageDigest;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.socketrocket.appengine.AppUtils;
 import com.example.socketrocket.appengine.database.DatabaseConnection;
 import com.example.socketrocket.appengine.database.reflect.objects.Score;
 import com.example.socketrocket.appengine.database.reflect.objects.Setting;
@@ -26,7 +27,7 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
 
     private DatabaseConnection dbHandle;
     private int currentRequestId = NetworkRequestDelegate.INVALID_REQUEST_ID;
-    private EditText textFieldUsername, textFieldEmail, textFieldPassword;
+    private EditText textFieldUsername, textFieldEmail, textFieldPassword, textFieldToken;
 
     // MARK: - Lifecycle
 
@@ -58,12 +59,13 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         this.findViewById(R.id.debug_button_send_test_request).setOnClickListener(this);
         this.findViewById(R.id.debug_button_send_signup_request).setOnClickListener(this);
         this.findViewById(R.id.debug_button_send_login_request).setOnClickListener(this);
-        this.findViewById(R.id.debug_button_send_userdata_request).setOnClickListener(this);
-        this.findViewById(R.id.debug_button_send_highscores_request).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_send_my_highscores_request).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_send_top_highscores_request).setOnClickListener(this);
         // netzwerk - user template
         this.textFieldUsername = this.findViewById(R.id.debug_edittext_username);
         this.textFieldEmail = this.findViewById(R.id.debug_edittext_email);
         this.textFieldPassword = this.findViewById(R.id.debug_edittext_password);
+        this.textFieldToken = this.findViewById(R.id.debug_edittext_token);
         this.textFieldUsername.setDefaultFocusHighlightEnabled(false);
     }
 
@@ -87,8 +89,8 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
             case R.id.debug_button_send_test_request: this.onSendTestRequestPressed(); break;
             case R.id.debug_button_send_signup_request: this.onSendSignupRequestPressed(); break;
             case R.id.debug_button_send_login_request: this.onSendLoginRequestPressed(); break;
-            case R.id.debug_button_send_userdata_request: this.onSendUserDataRequestPressed(); break;
-            case R.id.debug_button_send_highscores_request: this.onSendHighscoresRequestPressed(); break;
+            case R.id.debug_button_send_my_highscores_request: this.onSendLoadMyHighscoresRequestPressed(); break;
+            case R.id.debug_button_send_top_highscores_request: this.onSendLoadAllHighscoresRequest(); break;
             // sonstige
             default:
                 Toast.makeText(this, "Action not implemented", Toast.LENGTH_LONG).show(); break;
@@ -207,7 +209,8 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
     private void onSendSignupRequestPressed() {
         final String username = this.textFieldUsername.getText().toString();
         final String email = this.textFieldEmail.getText().toString();
-        final String password = this.textFieldPassword.getText().toString();
+        // passwort immer hashen muss immer 32 zeichen lang sein
+        final String password = AppUtils.md5(this.textFieldPassword.getText().toString());
         Runnable networkTask = new Runnable() {
             public void run() {
                 currentRequestId = NetworkConnection.sendSignUpRequest(DebugOptionsActivity.this, username, email, password);
@@ -224,7 +227,8 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
 
     private void onSendLoginRequestPressed() {
         final String username = this.textFieldUsername.getText().toString();
-        final String password = this.textFieldPassword.getText().toString();
+        // passwort immer hashen, muss 32 zeichen lang sein
+        final String password = AppUtils.md5(this.textFieldPassword.getText().toString());
         Runnable networkTask = new Runnable() {
             public void run() {
                 currentRequestId = NetworkConnection.sendLoginRequest(DebugOptionsActivity.this, username, password);
@@ -238,27 +242,29 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         this.showSendRequestPrompt(title, networkTask);
     }
 
-    private void onSendUserDataRequestPressed() {
+    private void onSendLoadMyHighscoresRequestPressed() {
+        final String token = this.textFieldToken.getText().toString();
         Runnable networkTask = new Runnable() {
             public void run() {
-                currentRequestId = NetworkConnection.sendLoadUserDataRequest(DebugOptionsActivity.this);
+                currentRequestId = NetworkConnection.sendLoadMyHighscoresRequest(DebugOptionsActivity.this, token);
                 if(currentRequestId != NetworkRequestDelegate.INVALID_REQUEST_ID)
                     setNetworkButtonsLocked(true);
             }
         };
-        String title = "Userdaten laden?";
+        String title = "Eigene Scores laden?";
+        title += "\ntoken: "+token;
         this.showSendRequestPrompt(title, networkTask);
     }
 
-    private void onSendHighscoresRequestPressed() {
+    private void onSendLoadAllHighscoresRequest() {
         Runnable networkTask = new Runnable() {
             public void run() {
-                currentRequestId = NetworkConnection.sendLoadHighscoresRequest(DebugOptionsActivity.this);
+                currentRequestId = NetworkConnection.sendLoadAllHighscoresRequest(DebugOptionsActivity.this);
                 if(currentRequestId != NetworkRequestDelegate.INVALID_REQUEST_ID)
                     setNetworkButtonsLocked(true);
             }
         };
-        String title = "Highscores laden?";
+        String title = "Top-Scores laden?";
         this.showSendRequestPrompt(title, networkTask);
     }
 
@@ -268,8 +274,8 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         this.findViewById(R.id.debug_button_send_test_request).setEnabled(!locked);
         this.findViewById(R.id.debug_button_send_signup_request).setEnabled(!locked);
         this.findViewById(R.id.debug_button_send_login_request).setEnabled(!locked);
-        this.findViewById(R.id.debug_button_send_userdata_request).setEnabled(!locked);
-        this.findViewById(R.id.debug_button_send_highscores_request).setEnabled(!locked);
+        this.findViewById(R.id.debug_button_send_my_highscores_request).setEnabled(!locked);
+        this.findViewById(R.id.debug_button_send_top_highscores_request).setEnabled(!locked);
     }
 
 

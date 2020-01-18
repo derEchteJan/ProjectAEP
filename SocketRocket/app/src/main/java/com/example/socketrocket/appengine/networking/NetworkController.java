@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -18,10 +19,12 @@ import java.net.URL;
 
 public class NetworkController {
 
-    private static final String BASE_URL = "http://76313ec7-f618-40af-bdc1-c85c58cf4bff.mock.pstmn.io"; // mockup server
+    //private static final String BASE_URL = "http://76313ec7-f618-40af-bdc1-c85c58cf4bff.mock.pstmn.io"; // mockup server
+    private static final String BASE_URL = "http://172.20.10.10"; // raspberry pi via ip
 
-    private static String tokenKey = "Postman-Token";
-    private static String tokenValue = "c3597b90-80a9-48ef-8ae6-69d9ce1f91d1,6502beb6-f442-440d-896c-79ecca7db99e";
+
+    private static String tokenKey = "token";
+    //private static String tokenValue = "c3597b90-80a9-48ef-8ae6-69d9ce1f91d1,6502beb6-f442-440d-896c-79ecca7db99e";
     private static String contentTypeKey = "Content-Type";
     private static String contentTypeValue = "Application/json";
     private static int requestIdCounter = 0;
@@ -37,7 +40,7 @@ public class NetworkController {
 
     // MARK: - Methods
 
-    protected int generateRequest(NetworkRequestDelegate caller, String path, String httpMethod, String[][] headers, String payload) {
+    protected int generateRequest(NetworkRequestDelegate caller, String path, String httpMethod, String[][] headers, String payload, String token) {
         if (caller == null) return NetworkRequestDelegate.INVALID_REQUEST_ID;
         int newRequestId = generateRequestId();
         URL url;
@@ -46,12 +49,13 @@ public class NetworkController {
         } catch (MalformedURLException e) {
             return NetworkRequestDelegate.INVALID_REQUEST_ID;
         }
-        String[][] cleanedHeaders = cleanHeaders(headers);
+        String[][] cleanedHeaders = cleanHeaders(headers, token);
         this.startRequestTaskThread(caller, newRequestId,url, httpMethod, cleanedHeaders, payload);
         return newRequestId;
     }
 
     protected void forwardDidRecieveResponse(final NetworkRequestDelegate caller, final int requestId, final String response) {
+        //System.out.println("RESPONSE LOG: "+response);
         final Activity contextOfCaller = (Activity) caller;
         final JSONObject[] results = this.parseResponse(response);
         if(results != null) {
@@ -86,12 +90,21 @@ public class NetworkController {
     private void startRequestTaskThread(final NetworkRequestDelegate caller, final int requestId, final URL url, final String httpMethod, final String[][] headers, final String payload) {
         new Thread(new Runnable() { public void run(){
             HttpURLConnection connection = null;
-            int statusCode = -1;
+            int statusCode;
             try {
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod(httpMethod);
                 connection.setRequestProperty(contentTypeKey, contentTypeValue);
                 for (String[] header: headers) connection.setRequestProperty(header[0], header[1]);
+                for (String[] header: headers) System.out.println("header: "+header[0]+"="+header[1]);
+                connection.setUseCaches(false);
+                if(payload != null) {
+                    connection.setDoOutput(true);
+                    DataOutputStream wr = new DataOutputStream (
+                            connection.getOutputStream());
+                    wr.writeBytes(payload);
+                    wr.close();
+                }
                 statusCode = connection.getResponseCode();
                 if (statusCode >= 300 || statusCode < 0) {
                     forwardDidRecieveError(caller, requestId, NetworkErrorType.httpStatus);
@@ -115,14 +128,16 @@ public class NetworkController {
         }}).start();
     }
 
-    private static String[][] cleanHeaders(String[][] headers) {
-        if (headers == null) return new String[0][0];
+    private static String[][] cleanHeaders(String[][] headers, String token) {
+        if (headers == null && token == null) return new String[0][0];
         else {
             int entryCount = 0;
-            for (String[] header: headers) {
-                if (header != null && header.length == 2 && header[0] != null && header[1] != null) entryCount++;
+            if(headers != null) {
+                for (String[] header: headers) {
+                    if (header != null && header.length == 2 && header[0] != null && header[1] != null) entryCount++;
+                }
             }
-            String[][] cleanedHeaders = new String[entryCount + 1][2];
+            String[][] cleanedHeaders = new String[entryCount + (token == null ? 0:1)][2];
             int copyIndex = 0;
             for (int i = 0; i < entryCount; i++) {
                 String[] header = headers[i];
@@ -134,8 +149,11 @@ public class NetworkController {
                     i--;
                 }
             }
-            cleanedHeaders[entryCount + 1][0] = "token";
-            cleanedHeaders[entryCount + 1][1] = "value";
+            if(token != null) {
+                cleanedHeaders[entryCount] = new String[2];
+                cleanedHeaders[entryCount][0] = tokenKey;
+                cleanedHeaders[entryCount][1] = token;
+            }
             return cleanedHeaders;
         }
     }

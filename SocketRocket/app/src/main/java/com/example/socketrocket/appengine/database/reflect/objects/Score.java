@@ -4,8 +4,8 @@ import com.example.socketrocket.appengine.database.reflect.ReflectableObject;
 
 public class Score extends ReflectableObject {
 
-    public long score = 0;
-    public String playerName = "";
+    public String user_name = "";
+    public long amount = 0;
     public long timestamp = 0;
 
 
