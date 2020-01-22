@@ -7,10 +7,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
-
-import com.example.socketrocket.R;
-import com.example.socketrocket.RegisterActivity;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
     @Override
@@ -18,7 +14,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.fragment_login);
+        setContentView(R.layout.activity_login);
 
 
         float size = new Button(this).getTextSize();
