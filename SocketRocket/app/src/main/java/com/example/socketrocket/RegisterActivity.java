@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.socketrocket.R;
+import com.example.socketrocket.appengine.AppUtils;
 import com.example.socketrocket.appengine.database.DatabaseConnection;
 import com.example.socketrocket.appengine.database.reflect.objects.User;
 import com.example.socketrocket.appengine.networking.NetworkConnection;
@@ -51,7 +52,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         this.usernameInput.setText("username");
         this.emailInput.setText("user@example.com");
         this.passwordInput.setText("username");
-        this.confirmPasswordInput.setText("username");
+        //this.confirmPasswordInput.setText("username");
     }
 
     @Override
@@ -76,7 +77,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
                 this.usernameInput.getText().clear();
                 this.showInvalidEmail();
             }else {
-                int requestId = NetworkConnection.sendRegistrationRequest(this, "email", username, password);
+                password = AppUtils.md5(password);
+                int requestId = NetworkConnection.sendRegistrationRequest(this, email, username, password);
                 this.currentRequestId = requestId;
                 if(requestId == NetworkRequestDelegate.INVALID_REQUEST_ID) {
                     this.currentRequestId = requestId;
