@@ -1,6 +1,7 @@
 package com.example.socketrocket;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,11 +12,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.socketrocket.R;
-import com.example.socketrocket.appengine.AppUtils;
 import com.example.socketrocket.appengine.database.DatabaseConnection;
 import com.example.socketrocket.appengine.database.reflect.objects.User;
 import com.example.socketrocket.appengine.networking.NetworkConnection;
@@ -31,6 +27,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
     private Button signUpButton;
     private int currentRequestId = NetworkRequestDelegate.INVALID_REQUEST_ID;
     private DatabaseConnection dbHandle;
+    private User sentUser = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +48,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         this.signUpButton.setOnClickListener(this);
         this.usernameInput.setText("username");
         this.emailInput.setText("user@example.com");
-        this.passwordInput.setText("username");
+        //this.passwordInput.setText("username");
         //this.confirmPasswordInput.setText("username");
     }
 
@@ -84,6 +81,11 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
                     this.currentRequestId = requestId;
                     this.showNetworkError(null);
                 }
+                this.sentUser = new User();
+                this.sentUser.name = username;
+                this.sentUser.email = email;
+                this.sentUser.password = password;
+                this.setNetworkButtonsLocked(true);
             }
         }
     }
@@ -94,7 +96,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
     private boolean checkPasswords(String pw1, String pw2) {
         // TODO: erweitern
         // liefert wenn die passworteingabe pw1 und die wiederholte eingabe pw2 gültig und gleich sind
-        return pw1.equals(pw2);
+        boolean patternMatch = pw1.matches("[a-z]{4,20}");
+        return patternMatch && pw1.equals(pw2);
     }
 
     private boolean checkUsername(String username) {
@@ -139,8 +142,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
     }
 
     private void showSignUpSuccess() {
-        // TODO: umsetzen
+        // Toast anzeigen -> erfolg
         Toast.makeText(this, "Registration completed!", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, MenuActivity.class);
+        startActivity(intent);
     }
 
 
@@ -148,53 +153,43 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
 
     @Override
     public void didRecieveNetworkResponse(int requestId, JSONObject[] data) {
+        // Input wieder freigeben
+        this.setNetworkButtonsLocked(false);
+        // Prüfen auf internen fehler
         if(requestId == NetworkRequestDelegate.INVALID_REQUEST_ID || requestId != this.currentRequestId || data.length < 1) {
-            return; // falsche request id
+            return;
         }
-        JSONObject tokenObject = data[0];
-        String token;
+        // Neuen User parsen und in der DB Speichern
         try {
-            token = (String) tokenObject.get("token");
-        } catch(Exception e) {
-            Toast.makeText(this, "Datenbank Zugriff fehlgeschlagen!", Toast.LENGTH_LONG).show();
+            JSONObject json = data[0];
+            User newUser = new User();
+            newUser.name = this.sentUser.name;
+            newUser.email = this.sentUser.email;
+            newUser.password = this.sentUser.password;
+            newUser.token = (String)json.get("token");
+            this.dbHandle.addUser(newUser);
+            this.sentUser = null;
+        } catch (Exception e) {
+            Toast.makeText(this, "Der Server hat ungültige Daten gesendet!", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+            return;
         }
-
-        // TODO: umsetzen
-        // TODO: "token" vom json auslesen, in der DB Speichern
-        System.out.println("erfolgreich registriert.");
-        if(this.handleResponse(data[0])){
-            this.showSignUpSuccess();
-        } else {
-            this.showInternalError();
-        }
+        this.showSignUpSuccess();
     }
 
     @Override
     public void didRecieveNetworkError(int requestId, NetworkErrorType errorType) {
+        this.setNetworkButtonsLocked(false);
+        this.sentUser = null;
         this.showNetworkError(errorType);
     }
 
 
     // MARK: - Response Handling
 
-    private boolean handleResponse(JSONObject responseObject) {
-        try {
-            User newUser = new User();
-            newUser.name = (String)responseObject.get("name");
-            newUser.email = (String)responseObject.get("email");
-            newUser.password = (String)responseObject.get("password");
-            newUser.token = (String)responseObject.get("token");
-            this.dbHandle.addUser(newUser);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            // TODO: wenn response ungültig ist
-            return false;
-        }
-    }
-
     private void setNetworkButtonsLocked(boolean locked) {
-        this.findViewById(R.id.register_button_signUp).setEnabled(!locked);
+        this.signUpButton.setEnabled(!locked);
+        this.usernameInput.setEnabled(!locked);
     }
 
 }

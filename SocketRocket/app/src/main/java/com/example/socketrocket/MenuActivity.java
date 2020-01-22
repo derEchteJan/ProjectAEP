@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.socketrocket.fragments.LoginFragment;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -72,7 +70,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
     public void goToLogin() {
         // TODO: Chris
-        Intent intent = new Intent(this, LoginFragment.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 

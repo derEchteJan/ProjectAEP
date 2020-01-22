@@ -19,7 +19,7 @@ public class NetworkConnection {
             json.accumulate("email", email);
             json.accumulate("password", password);
             String jsonRaw = json.toString();
-            return NetworkController.sharedInstance().generateRequest(delegate, "/signup", "POST", null, jsonRaw, null);
+            return NetworkController.sharedInstance().generateRequest(delegate, "/signup.php", "POST", null, jsonRaw, null);
         } catch (JSONException e) {
             // TODO: log error
             return NetworkRequestDelegate.INVALID_REQUEST_ID;
