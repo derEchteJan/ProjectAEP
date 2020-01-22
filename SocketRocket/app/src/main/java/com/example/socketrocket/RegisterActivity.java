@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.example.socketrocket.appengine.database.DatabaseConnection;
 import com.example.socketrocket.appengine.database.reflect.objects.User;
 import com.example.socketrocket.appengine.networking.NetworkConnection;
-import com.example.socketrocket.appengine.networking.NetworkErrorType;
+import com.example.socketrocket.appengine.networking.NetworkError;
 import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
 
 import org.json.JSONException;
@@ -129,21 +129,27 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         Toast.makeText(this, "Invalid EMail, must contain @!", Toast.LENGTH_LONG).show();
     }
 
-    private void showNetworkError(NetworkErrorType errorType) {
-        // TODO: umsetzen
-        System.out.println("Netzwerkfehler! "+errorType.toString());
-        Toast.makeText(this, errorType.toString(), Toast.LENGTH_LONG).show();
+    private void showNetworkError(NetworkError error) {
+        if(AppUtils.DEBUG_MODE) {
+            System.out.println("Netzwerkfehler:\n" + error.toString());
+        }
+        if(error.statusCode == 409) {
+            Toast.makeText(this, "Der Name ist bereits vergeben", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Netzwerkfehler", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void showInternalError() {
-        // TODO: umsetzen
-        System.out.println("Interner Fehler aufgetreten! ");
-        Toast.makeText(this, "Internal Error!", Toast.LENGTH_LONG).show();
+        if (AppUtils.DEBUG_MODE) {
+            System.out.println("Interner Fehler aufgetreten");
+        }
+        Toast.makeText(this, "Interner Fehler aufgetreten", Toast.LENGTH_LONG).show();
     }
 
     private void showSignUpSuccess() {
-        // Toast anzeigen -> erfolg
-        Toast.makeText(this, "Registration completed!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Registierung erfolgreich", Toast.LENGTH_LONG).show();
+        // back to main menu
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }
@@ -171,17 +177,20 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
             this.sentUser = null;
         } catch (Exception e) {
             Toast.makeText(this, "Der Server hat ungültige Daten gesendet!", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
+            if(AppUtils.DEBUG_MODE) {
+                System.out.println("Error in RegisterActivity while processing User");
+                e.printStackTrace();
+            }
             return;
         }
         this.showSignUpSuccess();
     }
 
     @Override
-    public void didRecieveNetworkError(int requestId, NetworkErrorType errorType) {
+    public void didRecieveNetworkError(int requestId, NetworkError error) {
         this.setNetworkButtonsLocked(false);
         this.sentUser = null;
-        this.showNetworkError(errorType);
+        this.showNetworkError(error);
     }
 
 

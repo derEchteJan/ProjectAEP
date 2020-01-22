@@ -7,6 +7,8 @@ import org.json.JSONObject;
 
 public class NetworkConnection {
 
+    public static boolean LOG_ENABLED = false;
+
     // only for debugging
     public static int sendTestRequest(NetworkRequestDelegate delegate) {
         return NetworkController.sharedInstance().generateRequest(delegate, "/", "GET", null, null, null);
