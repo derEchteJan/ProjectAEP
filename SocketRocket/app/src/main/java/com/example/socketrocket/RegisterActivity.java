@@ -33,20 +33,16 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_register);
         this.dbHandle = new DatabaseConnection(this);
-        this.init();
+        this.initViews();
     }
 
-    private void init() {
+    private void initViews() {
         this.usernameInput = this.findViewById(R.id.register_edittext_username);
         this.emailInput = this.findViewById(R.id.register_edittext_email);
         this.passwordInput = this.findViewById(R.id.register_edittext_password);
         this.confirmPasswordInput = this.findViewById(R.id.register_edittext_password_repeat);
         this.signUpButton = this.findViewById(R.id.register_button_signup);
         this.signUpButton.setOnClickListener(this);
-        //this.usernameInput.setText("username");
-        //this.emailInput.setText("user@example.com");
-        //this.passwordInput.setText("username");
-        //this.confirmPasswordInput.setText("username");
     }
 
     @Override
