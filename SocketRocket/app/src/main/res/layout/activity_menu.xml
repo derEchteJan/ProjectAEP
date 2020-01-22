@@ -7,39 +7,123 @@
     android:background="@color/background_floating_material_dark">
 
 
-    <TextView
-        android:id="@+id/txvHeader"
-        android:layout_width="205dp"
-        android:layout_height="48dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="Socket Rocket"
-        android:textAlignment="center"
-        android:textColor="@color/background_floating_material_light"
-        android:textSize="29sp"
-        android:weightSum="1.0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.096" />
-
-    <Button
-        android:id="@+id/btnStart"
+    <LinearLayout android:id="@+id/menu_linearlayout_buttoncontainer_1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="50dp"
-        android:backgroundTint="@color/abc_search_url_text_normal"
-        android:text="START"
+        android:weightSum="2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/menu_button_play"
+            android:backgroundTint="@color/abc_search_url_text_normal"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_weight="1"
+            android:layout_marginVertical="15dp"
+            android:layout_marginHorizontal="15dp"
+            android:text="SCORES"
+            android:textColor="@color/background_floating_material_light"
+            android:textSize="50px"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/menu_button_play" />
+
+        <Button
+            android:id="@+id/menu_button_account"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_weight="1"
+            android:layout_marginVertical="15dp"
+            android:layout_marginHorizontal="15dp"
+            android:text="SETTINGS"
+            android:textColor="@color/background_floating_material_light"
+            android:textSize="50px"
+            app:layout_constraintStart_toEndOf="@id/menu_button_scores"
+            app:layout_constraintTop_toTopOf="@id/menu_button_scores" />
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/menu_linearlayout_buttoncontainer_2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2"
+        android:layout_marginTop="0dp"
+        app:layout_constraintTop_toBottomOf="@id/menu_linearlayout_buttoncontainer_1"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/menu_button_scores"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_weight="1"
+            android:layout_marginVertical="15dp"
+            android:layout_marginHorizontal="15dp"
+            android:text="SCORES"
+            android:textColor="@color/background_floating_material_light"
+            android:textSize="50px"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/menu_button_play" />
+
+        <Button
+            android:id="@+id/menu_button_settings"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_weight="1"
+            android:layout_marginVertical="15dp"
+            android:layout_marginHorizontal="15dp"
+            android:text="SETTINGS"
+            android:textColor="@color/background_floating_material_light"
+            android:textSize="50px"
+            app:layout_constraintStart_toEndOf="@id/menu_button_scores"
+            app:layout_constraintTop_toTopOf="@id/menu_button_scores" />
+
+    </LinearLayout>
+    <!--
+
+    <Button
+        android:id="@+id/menu_button_scores"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:text="SCORES"
         android:textColor="@color/background_floating_material_light"
         android:textSize="50px"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txvHeader" />
+        app:layout_constraintTop_toBottomOf="@id/menu_button_play" />
 
+    <Button
+        android:id="@+id/menu_button_settings"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="50dp"
+        android:text="SETTINGS"
+        android:textColor="@color/background_floating_material_light"
+        android:textSize="50px"
+        app:layout_constraintStart_toEndOf="@id/menu_button_scores"
+        app:layout_constraintTop_toTopOf="@id/menu_button_scores" />
+
+    -->
+
+    <!-- DEBUG OPTIONS -->
+    <Button
+        android:visibility="gone"
+        android:id="@+id/menu_button_debug_options"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginRight="25dp"
+        android:text="DEBUG OTPIONS"
+        android:textColor="@color/background_floating_material_light"
+        android:textSize="30px"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!--
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="fill_parent"
@@ -75,6 +159,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnHigh" />
-
+    -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
