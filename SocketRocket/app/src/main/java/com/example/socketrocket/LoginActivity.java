@@ -1,4 +1,4 @@
-package com.example.socketrocket.fragments;
+package com.example.socketrocket;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.example.socketrocket.R;
 import com.example.socketrocket.RegisterActivity;
 
-public class LoginFragment extends Activity implements View.OnClickListener {
+public class LoginActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

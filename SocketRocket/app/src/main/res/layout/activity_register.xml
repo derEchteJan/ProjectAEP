@@ -7,6 +7,23 @@
     android:background="@color/background_floating_material_dark">
 
     <TextView
+        android:id="@+id/textView6"
+        android:layout_width="91dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="300dp"
+        android:text="E-Mail:"
+        android:textAlignment="viewStart"
+        android:textColor="@color/background_floating_material_light"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView11" />
+
+    <TextView
         android:id="@+id/textView13"
         android:layout_width="91dp"
         android:layout_height="35dp"
@@ -24,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@id/textView12" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/register.button_signUp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
@@ -37,7 +54,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editText6" />
+        app:layout_constraintTop_toBottomOf="@id/register.editText_confirm_password" />
 
     <TextView
         android:id="@+id/textView12"
@@ -54,7 +71,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView11" />
+        app:layout_constraintTop_toBottomOf="@id/textView6" />
 
     <TextView
         android:id="@+id/textView11"
@@ -74,7 +91,7 @@
         app:layout_constraintTop_toBottomOf="@id/textView4" />
 
     <EditText
-        android:id="@+id/editText6"
+        android:id="@+id/register.editText_confirm_password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="140dp"
@@ -90,7 +107,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editText5" />
+        app:layout_constraintTop_toBottomOf="@id/register.editText_password" />
 
     <TextView
         android:id="@+id/textView4"
@@ -109,7 +126,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/register.editText_username"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="140dp"
@@ -129,7 +146,7 @@
         app:layout_constraintTop_toBottomOf="@id/textView4" />
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/register.editText_password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="140dp"
@@ -145,6 +162,25 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editText4" />
+        app:layout_constraintTop_toBottomOf="@id/register.editText_email" />
+
+    <EditText
+        android:id="@+id/register.editText_email"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="140dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="50dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/background_floating_material_light"
+        android:textColorHighlight="@color/abc_search_url_text_normal"
+        android:textColorHint="@color/background_floating_material_light"
+        android:textColorLink="@color/abc_search_url_text_normal"
+        android:textCursorDrawable="@color/abc_search_url_text_normal"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/register.editText_username" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

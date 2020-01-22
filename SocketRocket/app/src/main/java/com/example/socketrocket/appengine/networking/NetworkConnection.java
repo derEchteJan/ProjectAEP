@@ -12,6 +12,20 @@ public class NetworkConnection {
         return NetworkController.sharedInstance().generateRequest(delegate, "/", "GET", null, null, null);
     }
 
+    public static int sendRegistrationRequest(NetworkRequestDelegate delegate, String email, String username, String password) {
+        try {
+            JSONObject json = new JSONObject();
+            json.accumulate("name", username);
+            json.accumulate("email", email);
+            json.accumulate("password", password);
+            String jsonRaw = json.toString();
+            return NetworkController.sharedInstance().generateRequest(delegate, "/signup.php", "POST", null, jsonRaw, null);
+        } catch (JSONException e) {
+            // TODO: log error
+            return NetworkRequestDelegate.INVALID_REQUEST_ID;
+        }
+    }
+
     public static int sendSignUpRequest(NetworkRequestDelegate delegate, String name, String email, String password) {
         try {
             JSONObject json = new JSONObject();
