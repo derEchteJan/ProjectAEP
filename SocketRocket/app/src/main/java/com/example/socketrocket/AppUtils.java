@@ -9,6 +9,10 @@ import java.security.MessageDigest;
 
 public class AppUtils {
 
+    // MARK: Debug Mode
+
+    public static final boolean DEBUG_MODE = true;
+
 
     // MARK: UI
 

@@ -14,7 +14,7 @@ import com.example.socketrocket.appengine.database.reflect.objects.Score;
 import com.example.socketrocket.appengine.database.reflect.objects.Setting;
 import com.example.socketrocket.appengine.database.reflect.objects.User;
 import com.example.socketrocket.appengine.networking.NetworkConnection;
-import com.example.socketrocket.appengine.networking.NetworkErrorType;
+import com.example.socketrocket.appengine.networking.NetworkError;
 import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
 
 import org.json.JSONObject;
@@ -290,8 +290,8 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
     }
 
     @Override
-    public void didRecieveNetworkError(int requestId, NetworkErrorType errorType) {
-        String result = "Network error: " + errorType.toString();
+    public void didRecieveNetworkError(int requestId, NetworkError error) {
+        String result = "Network error: " + error.toString();
         System.out.println(result);
         Toast.makeText(this, result, Toast.LENGTH_LONG).show();
         this.setNetworkButtonsLocked(false);
