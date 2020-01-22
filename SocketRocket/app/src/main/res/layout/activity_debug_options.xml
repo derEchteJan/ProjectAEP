@@ -143,6 +143,17 @@
                 android:hint="Passwort"
                 android:textColorHint="#FF808080"
                 android:textColor="#FFFFFF" />
+            <EditText
+                android:id="@+id/debug_edittext_token"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="50dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text=""
+                android:hint="auth-Token"
+                android:textColorHint="#FF808080"
+                android:textColor="#FFFFFF" />
             <Button
                 android:id="@+id/debug_button_send_test_request"
                 android:layout_width="match_parent"
@@ -165,19 +176,19 @@
                 android:layout_marginHorizontal="40dp"
                 android:text="Login anfragen" />
             <Button
-                android:id="@+id/debug_button_send_userdata_request"
+                android:id="@+id/debug_button_send_my_highscores_request"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginHorizontal="40dp"
-                android:text="Userdaten Laden" />
+                android:text="Eigene Scores Laden" />
             <Button
-                android:id="@+id/debug_button_send_highscores_request"
+                android:id="@+id/debug_button_send_top_highscores_request"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginHorizontal="40dp"
-                android:text="Highscores laden" />
+                android:text="Top Scores laden" />
 
         </LinearLayout>
 
