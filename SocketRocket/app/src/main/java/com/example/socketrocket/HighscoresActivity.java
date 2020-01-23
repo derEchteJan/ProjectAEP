@@ -2,6 +2,7 @@ package com.example.socketrocket;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -32,12 +33,13 @@ import java.util.Locale;
 
 public class HighscoresActivity extends Activity implements View.OnClickListener, NetworkRequestDelegate {
 
-    private int TITLE_COLOR_DEFAULT, TITLE_COLOR_LOADING;
+    private int TITLE_COLOR_DEFAULT, TITLE_COLOR_LOCKED, TITLE_COLOR_LOADING;
 
     private TableLayout table;
     private TextView titleLabel, titleAnnotationLabel;
     private Button myScoresButton, topScoresButton;
     private boolean isLoading = false;
+    private boolean hasUser = false;
     private int currentTabIndex = 0;
     private Score[] myScores, topScores;
     private DatabaseConnection dbHandle;
@@ -48,16 +50,17 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_highscores);
         this.dbHandle = new DatabaseConnection(this);
+        this.hasUser = this.dbHandle.getAllUsers().length > 0;
         this.initViews();
     }
 
     private void initViews() {
         // colors
         this.TITLE_COLOR_DEFAULT = 0xFFFFFFFF;
+        this.TITLE_COLOR_LOCKED = 0xC0B0B0B0;
         this.TITLE_COLOR_LOADING = super.getResources().getColor(R.color.abc_search_url_text_normal);
         // title
         this.titleLabel = super.findViewById(R.id.highscores_textview_title);
@@ -111,15 +114,29 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
 
     private void onTopScoresButtonPressed() {
         if(this.currentTabIndex != 1) {
-            this.currentTabIndex = 1;
-            this.updateButtons();
-            this.reloadTableView();
+            if(this.hasUser) {
+                this.currentTabIndex = 1;
+                this.updateButtons();
+                this.reloadTableView();
+            } else {
+                this.showLoginRequirementDialog();
+            }
         }
+    }
+
+    private void showLoginRequirementDialog() {
+        Runnable onContinueToLoginTask = new Runnable() {
+            public void run() {
+                Intent intent = new Intent(HighscoresActivity.this, LoginActivity.class);
+                HighscoresActivity.this.startActivity(intent);
+            }
+        };
+        AppUtils.showAskIfContinueAlert(this, "Um die globalen Bestleistungen zu sehen müssen Sie eingeloggt sein. Jetzt Account Erstellen?", onContinueToLoginTask);
     }
 
     private void updateButtons() {
         this.myScoresButton.setTextColor(this.currentTabIndex == 0 ? TITLE_COLOR_DEFAULT : TITLE_COLOR_LOADING);
-        this.topScoresButton.setTextColor(this.currentTabIndex == 0 ? TITLE_COLOR_LOADING : TITLE_COLOR_DEFAULT);
+        this.topScoresButton.setTextColor(this.currentTabIndex == 0 ? (this.hasUser ? TITLE_COLOR_LOADING : TITLE_COLOR_LOCKED) : TITLE_COLOR_DEFAULT);
         this.myScoresButton.setEnabled(this.currentTabIndex != 0);
         this.topScoresButton.setEnabled(this.currentTabIndex != 1);
         this.titleLabel.setClickable(!this.isLoading && this.currentTabIndex == 1);
@@ -157,14 +174,6 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
         this.table.requestLayout();
     }
 
-    /*private void addLodingIndicator() {
-        Toast.makeText(this, "loading", Toast.LENGTH_LONG).show();
-    }
-
-    private void addErrorIndicator() {
-        Toast.makeText(this, "error", Toast.LENGTH_LONG).show();
-    }*/
-
 
     // MARK: - Data Loading
 
@@ -176,9 +185,11 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
     }
 
     private void loadInitialData() {
-        this.loadMyScoresDebug();
+        this.loadMyScores();
         // todo: evtl vorhandene daten vom AppController bevorzugen
-        this.loadTopScores();
+        if(this.hasUser) {
+            this.loadTopScores();
+        }
     }
 
     // TODO: Austauschen
@@ -187,20 +198,23 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
         try {
             this.myScores = this.dbHandle.getAllScores();
         } catch (Exception e) {
-            Toast.makeText(this, "Datenbankfehler", Toast.LENGTH_LONG);
+            this.myScores = null;
+            return;
         }
     }
 
-    private void loadMyScoresDebug() {
-        this.myScores = generateDummyScores();
-    }
 
     private void loadTopScores() {
         this.setLoadingState(true);
+        if(this.currentTabIndex == 1) {
+            this.table.removeAllViews();
+            this.table.addView(new IndicatorRow(this, IndicatorRow.Type.IS_LOADING));
+            this.table.requestLayout();
+        }
         NetworkConnection.sendLoadAllHighscoresRequest(this);
     }
 
-    private /*debug*/ Score[] generateDummyScores() {
+    /*private Score[] generateDummyScores() {
         int count = (int)(Math.random() * 5) + 5;
         count = 1;
         Score[] results = new Score[count];
@@ -215,7 +229,7 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
             results[i] = dummy;
         }
         return null;
-    }
+    }*/
 
 
     // MARK: - NetworkRequestDelegate

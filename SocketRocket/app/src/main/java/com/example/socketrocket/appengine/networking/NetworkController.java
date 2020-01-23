@@ -86,6 +86,9 @@ public class NetworkController {
 
     private void startRequestTaskThread(final NetworkRequestDelegate caller, final int requestId, final URL url, final String httpMethod, final String[][] headers, final String payload) {
         new Thread(new Runnable() { public void run(){
+            // Debug delay
+            try{Thread.sleep(3000);}catch(InterruptedException e){}
+            //
             HttpURLConnection connection = null;
             int statusCode;
             try {

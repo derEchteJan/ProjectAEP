@@ -25,7 +25,7 @@ public class AccountOverviewActivity extends Activity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_account_overview);
+        this.setContentView(R.layout.activity_account_overview);
         this.dbHandle = new DatabaseConnection(this);
         this.initViews();
         this.loadCurrentUser();
