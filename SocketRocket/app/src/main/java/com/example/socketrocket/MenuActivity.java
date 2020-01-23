@@ -13,13 +13,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.socketrocket.appengine.database.DatabaseConnection;
 import com.example.socketrocket.appengine.database.reflect.objects.User;
+import com.example.socketrocket.appengine.networking.NetworkError;
+import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
 
-public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
+import org.json.JSONObject;
+
+public class MenuActivity extends AppCompatActivity implements NetworkRequestDelegate, View.OnClickListener {
 
     private Button playButton, accountButton, debugObtionsButton;
     private TextView accountButtonOverlayText;
     private DatabaseConnection dbHandle;
     private User currentUser;
+    private AppController appController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +33,11 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_menu);
         this.dbHandle = new DatabaseConnection(this);
+        this.appController = new AppController(this);
         this.initViews();
         this.loadCurrentUser();
         this.updateViews();
+        this.appController.loadDataOnAppstart();
     }
 
     @Override
@@ -135,5 +142,18 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception e) {
             // TODO: DB Fehler behandeln
         }
+    }
+
+
+    // MARK: - NetworkRequestDelegate
+
+    @Override
+    public void didRecieveNetworkResponse(int requestId, JSONObject[] data) {
+        this.appController.didRecieveNetworkResponse(requestId, data);
+    }
+
+    @Override
+    public void didRecieveNetworkError(int requestId, NetworkError error) {
+        this.appController.didRecieveNetworkError(requestId, error);
     }
 }
