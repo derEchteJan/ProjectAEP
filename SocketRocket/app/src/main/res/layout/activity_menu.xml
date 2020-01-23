@@ -38,7 +38,7 @@
             android:layout_marginVertical="15dp"
             android:layout_marginHorizontal="15dp"
             android:text="ACCOUNT"
-            android:textColor="@color/background_floating_material_light"
+            android:textColor="@color/background_floating_material_dark"
             android:textSize="50px"
             app:layout_constraintStart_toEndOf="@id/menu_button_scores"
             app:layout_constraintTop_toTopOf="@id/menu_button_scores" />

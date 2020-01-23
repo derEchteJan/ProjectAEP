@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.example.socketrocket.appengine.database.reflect.objects.User;
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button playButton, accountButton, debugObtionsButton;
+    private TextView accountButtonOverlayText;
     private DatabaseConnection dbHandle;
     private User currentUser;
 
@@ -42,13 +44,20 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         this.playButton = this.findViewById(R.id.menu_button_play);
         this.accountButton = this.findViewById(R.id.menu_button_account);
         this.debugObtionsButton = this.findViewById(R.id.menu_button_debug_options);
+        this.accountButtonOverlayText = this.findViewById(R.id.menu_textview_account_overlay);
         this.playButton.setOnClickListener(this);
         this.accountButton.setOnClickListener(this);
     }
 
     private void updateViews() {
-        if(this.currentUser != null) this.accountButton.setText("Angemeldet als:\n"+this.currentUser.name);
-        else this.accountButton.setText("Anmelden");
+        if(this.currentUser != null) {
+            this.accountButton.setText(this.currentUser.name);
+            this.accountButtonOverlayText.setVisibility(View.VISIBLE);
+        }
+        else {
+            this.accountButton.setText("Anmelden");
+            this.accountButtonOverlayText.setVisibility(View.INVISIBLE);
+        }
         if(AppUtils.DEBUG_MODE) {
             this.debugObtionsButton.setOnClickListener(this);
             this.debugObtionsButton.setVisibility(View.VISIBLE);
