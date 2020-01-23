@@ -192,7 +192,6 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
         }
     }
 
-    // TODO: Austauschen
     private void loadMyScores() {
         this.myScores = null;
         try {
@@ -203,7 +202,6 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
         }
     }
 
-
     private void loadTopScores() {
         this.setLoadingState(true);
         if(this.currentTabIndex == 1) {
@@ -213,23 +211,6 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
         }
         NetworkConnection.sendLoadAllHighscoresRequest(this);
     }
-
-    /*private Score[] generateDummyScores() {
-        int count = (int)(Math.random() * 5) + 5;
-        count = 1;
-        Score[] results = new Score[count];
-        long msPerH = 1000 * 60 * 60;
-        int maxHago = 72;
-        for (int i = 0; i < count; i++) {
-            Score dummy = new Score();
-            long current = System.currentTimeMillis();
-            long randomDelta = (long) (Math.random() * maxHago) * msPerH;
-            dummy.timestamp = current - randomDelta;
-            dummy.amount = (long) (Math.random() * 1000) + 100;
-            results[i] = dummy;
-        }
-        return null;
-    }*/
 
 
     // MARK: - NetworkRequestDelegate
@@ -322,6 +303,10 @@ public class HighscoresActivity extends Activity implements View.OnClickListener
             RelativeLayout.LayoutParams titleLayout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             titleLayout.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
             titleLayout.leftMargin = 10;
+            if(this.type == Type.MY) {
+                titleLayout.topMargin = 10;
+                titleLayout.bottomMargin = 10;
+            }
             RelativeLayout.LayoutParams timestampLayout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             timestampLayout.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
             timestampLayout.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);

@@ -141,8 +141,9 @@
         android:layout_marginBottom="25dp"
         android:layout_marginRight="25dp"
         android:text="DEBUG OTPIONS"
-        android:textColor="@color/background_floating_material_light"
-        android:textSize="30px"
+        android:textColor="@color/background_floating_material_dark"
+        android:background="#FFFF00FF"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
