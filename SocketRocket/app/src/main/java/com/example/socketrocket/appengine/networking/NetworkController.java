@@ -21,12 +21,10 @@ public class NetworkController {
 
     //private static final String BASE_URL = "http://76313ec7-f618-40af-bdc1-c85c58cf4bff.mock.pstmn.io"; // mockup server
     private static final String BASE_URL = "http://172.20.10.10"; // raspberry pi via ip
-
-
     private static String tokenKey = "token";
-    //private static String tokenValue = "c3597b90-80a9-48ef-8ae6-69d9ce1f91d1,6502beb6-f442-440d-896c-79ecca7db99e";
     private static String contentTypeKey = "Content-Type";
     private static String contentTypeValue = "Application/json";
+
     private static int requestIdCounter = 0;
 
     // singleton instance
@@ -54,8 +52,9 @@ public class NetworkController {
         return newRequestId;
     }
 
+    // NetworkRequestDelegate
+
     protected void forwardDidRecieveResponse(final NetworkRequestDelegate caller, final int requestId, final String response) {
-        //System.out.println("RESPONSE LOG: "+response);
         final Activity contextOfCaller = (Activity) caller;
         final JSONObject[] results = this.parseResponse(response);
         if(results != null) {
@@ -64,40 +63,43 @@ public class NetworkController {
                     caller.didRecieveNetworkResponse(requestId, results);
                 }
             });
-        } else { // parsing error
-            // TODO: Fehler loggen
+        } else {
+            // Parsing error
             contextOfCaller.runOnUiThread(new Runnable(){
                 public void run(){
-                    caller.didRecieveNetworkError(requestId, NetworkErrorType.badResponse);
+                    caller.didRecieveNetworkError(requestId, new NetworkError(NetworkError.Type.badResponse, "JSON Parsing Error"));
                 }
             });
         }
     }
 
-    protected void forwardDidRecieveError(final NetworkRequestDelegate caller, final int requestId, final NetworkErrorType error) {
-        // TODO: Fehler loggen
+    protected void forwardDidRecieveError(final NetworkRequestDelegate caller, final int requestId, final NetworkError error) {
         final Activity contextOfCaller = (Activity) caller;
         contextOfCaller.runOnUiThread(new Runnable(){
             public void run(){
                 caller.didRecieveNetworkError(requestId, error);
             }
         });
-
     }
 
     // MARK: - subs
 
     private void startRequestTaskThread(final NetworkRequestDelegate caller, final int requestId, final URL url, final String httpMethod, final String[][] headers, final String payload) {
         new Thread(new Runnable() { public void run(){
+            // Debug delay
+            //try{Thread.sleep(1000);}catch(InterruptedException e){}
+            //
             HttpURLConnection connection = null;
             int statusCode;
             try {
+                // open connection
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod(httpMethod);
                 connection.setRequestProperty(contentTypeKey, contentTypeValue);
+                // set headers
                 for (String[] header: headers) connection.setRequestProperty(header[0], header[1]);
-                for (String[] header: headers) System.out.println("header: "+header[0]+"="+header[1]);
                 connection.setUseCaches(false);
+                // send request payload
                 if(payload != null) {
                     connection.setDoOutput(true);
                     DataOutputStream wr = new DataOutputStream (
@@ -106,24 +108,27 @@ public class NetworkController {
                     wr.close();
                 }
                 statusCode = connection.getResponseCode();
-                if (statusCode >= 300 || statusCode < 0) {
-                    forwardDidRecieveError(caller, requestId, NetworkErrorType.httpStatus);
+                if (statusCode != 200) {
+                    forwardDidRecieveError(caller, requestId, new NetworkError(NetworkError.Type.httpStatus, connection.getResponseMessage(), statusCode));
+                    return;
                 }
+                // read response payload
+                String payload = "";
+                try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                    for(String nextLine = reader.readLine(); nextLine != null; nextLine = reader.readLine()) payload += nextLine + '\n';
+                } catch (IOException e) {
+                    // connection closed
+                    forwardDidRecieveError(caller, requestId, new NetworkError(NetworkError.Type.connectionClosed));
+                    return;
+                }
+                forwardDidRecieveResponse(caller, requestId, payload);
+                return;
             } catch (MalformedURLException | ProtocolException e) {
-                // fatal, these should never happen, must be ensured by controller
+                // fatal, should never happen, must be ensured by connection / caller
                 e.printStackTrace(); System.exit(0);
             } catch (IOException e) {
-                forwardDidRecieveError(caller, requestId, NetworkErrorType.notReachable);
+                forwardDidRecieveError(caller, requestId, new NetworkError(NetworkError.Type.notReachable));
                 return;
-            }
-            try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                String response = "";
-                for(String nextLine = reader.readLine(); nextLine != null; nextLine = reader.readLine()) {
-                    response += nextLine + '\n';
-                }
-                forwardDidRecieveResponse(caller, requestId, response);
-            } catch (IOException e) {
-                forwardDidRecieveError(caller, requestId, NetworkErrorType.connectionClosed);
             }
         }}).start();
     }

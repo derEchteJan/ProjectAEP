@@ -2,23 +2,19 @@ package com.example.socketrocket;
 
 import android.app.Activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import java.security.MessageDigest;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.socketrocket.appengine.AppUtils;
 import com.example.socketrocket.appengine.database.DatabaseConnection;
 import com.example.socketrocket.appengine.database.reflect.objects.Score;
 import com.example.socketrocket.appengine.database.reflect.objects.Setting;
 import com.example.socketrocket.appengine.database.reflect.objects.User;
 import com.example.socketrocket.appengine.networking.NetworkConnection;
-import com.example.socketrocket.appengine.networking.NetworkErrorType;
+import com.example.socketrocket.appengine.networking.NetworkError;
 import com.example.socketrocket.appengine.networking.NetworkRequestDelegate;
 
 import org.json.JSONObject;
@@ -54,7 +50,10 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         this.findViewById(R.id.debug_button_print_user_data).setOnClickListener(this);
         this.findViewById(R.id.debug_button_print_highscore_data).setOnClickListener(this);
         this.findViewById(R.id.debug_button_print_settings_data).setOnClickListener(this);
-        this.findViewById(R.id.debug_button_populate_db).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_create_user_dummy).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_delete_users).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_create_score_dummy).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_delete_scores).setOnClickListener(this);
         // netzwerk
         this.findViewById(R.id.debug_button_send_test_request).setOnClickListener(this);
         this.findViewById(R.id.debug_button_send_signup_request).setOnClickListener(this);
@@ -84,7 +83,10 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
             case R.id.debug_button_print_user_data: this.onPrintUserDataPressed(); break;
             case R.id.debug_button_print_highscore_data: this.onPrintHighscoreDataPressed(); break;
             case R.id.debug_button_print_settings_data: this.onPrintSettingsDataPressed(); break;
-            case R.id.debug_button_populate_db: this.onPopulateDBPressed(); break;
+            case R.id.debug_button_create_user_dummy: this.onCreateDummyUserPressed(); break;
+            case R.id.debug_button_delete_users: this.onDeleteUserDataPressed(); break;
+            case R.id.debug_button_create_score_dummy: this.onCreateDummyScoresPressed(); break;
+            case R.id.debug_button_delete_scores: this.onDeleteScoreDataPressed(); break;
             // netzwerk
             case R.id.debug_button_send_test_request: this.onSendTestRequestPressed(); break;
             case R.id.debug_button_send_signup_request: this.onSendSignupRequestPressed(); break;
@@ -121,7 +123,7 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
                 Toast.makeText(DebugOptionsActivity.this, result, Toast.LENGTH_LONG).show();
             }
         };
-        this.showSendRequestPrompt("Delete Database?", databaseTask);
+        AppUtils.showAskIfContinueAlert(this, "Delete Database?", databaseTask);
     }
 
     private void onDBInfoPressed() {
@@ -151,7 +153,7 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
                 Toast.makeText(DebugOptionsActivity.this, result, Toast.LENGTH_LONG).show();
             }
         };
-        this.showSendRequestPrompt("Print all User Objects?", databaseTask);
+        AppUtils.showAskIfContinueAlert(this, "Print all User Objects?", databaseTask);
     }
 
     private void onPrintHighscoreDataPressed() {
@@ -168,7 +170,7 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
                 Toast.makeText(DebugOptionsActivity.this, result, Toast.LENGTH_LONG).show();
             }
         };
-        this.showSendRequestPrompt("Print all Score Objects?", databaseTask);
+        AppUtils.showAskIfContinueAlert(this, "Print all User Objects?", databaseTask);
     }
 
     private void onPrintSettingsDataPressed() {
@@ -185,11 +187,64 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
                 Toast.makeText(DebugOptionsActivity.this, result, Toast.LENGTH_LONG).show();
             }
         };
-        this.showSendRequestPrompt("Print all Settings Objects?", databaseTask);
+        AppUtils.showAskIfContinueAlert(this, "Print all Setting Objects?", databaseTask);
     }
 
-    private void onPopulateDBPressed() {
-        // TODO: Datenbank besiedeln
+    private void onCreateDummyUserPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                User dummy = new User();
+                dummy.name = "debug_user";
+                dummy.email = "debug@user.net";
+                dummy.password = AppUtils.md5("passwort");
+                dummy.token = AppUtils.md5("12345");
+                dbHandle.deleteAllUsers();
+                dbHandle.addUser(dummy);
+                Toast.makeText(DebugOptionsActivity.this, "User erstellt", Toast.LENGTH_LONG).show();
+            }
+        };
+        AppUtils.showAskIfContinueAlert(this, "Dummy-User \"debug_user\" erstellen? Bestehender User wird überschrieben.", databaseTask);
+    }
+
+    private void onDeleteUserDataPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                dbHandle.deleteAllUsers();
+                Toast.makeText(DebugOptionsActivity.this, "success", Toast.LENGTH_LONG).show();
+            }
+        };
+        AppUtils.showAskIfContinueAlert(this, "Alle User löschen?", databaseTask);
+    }
+
+    private void onCreateDummyScoresPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                dbHandle.deleteAllScores();
+                int count = (int)(Math.random() * 5) + 5;
+                long msPerHour = 1000 * 60 * 60;
+                int maxHoursAgo = 1000;
+                for (int i = 0; i < count; i++) {
+                    Score dummy = new Score();
+                    long current = System.currentTimeMillis();
+                    long randomDelta = (long) (Math.random() * maxHoursAgo) * msPerHour;
+                    dummy.timestamp = current - randomDelta;
+                    dummy.amount = (long) (Math.random() * 1000) + 100;
+                    dbHandle.addScore(dummy);
+                }
+                Toast.makeText(DebugOptionsActivity.this, "Scores erstellt", Toast.LENGTH_LONG).show();
+            }
+        };
+        AppUtils.showAskIfContinueAlert(this, "Lokale Dummy-Scores generieren?", databaseTask);
+    }
+
+    private void onDeleteScoreDataPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                dbHandle.deleteAllScores();
+                Toast.makeText(DebugOptionsActivity.this, "Scores gelöscht", Toast.LENGTH_LONG).show();
+            }
+        };
+        AppUtils.showAskIfContinueAlert(this, "Alle lokalen Scores löschen?", databaseTask);
     }
 
 
@@ -203,14 +258,13 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
                     setNetworkButtonsLocked(true);
             }
         };
-        this.showSendRequestPrompt("Test Anfrage senden?", networkTask);
+        AppUtils.showAskIfContinueAlert(this, "Test-Request senden?", networkTask);
     }
 
     private void onSendSignupRequestPressed() {
         final String username = this.textFieldUsername.getText().toString();
         final String email = this.textFieldEmail.getText().toString();
-        // passwort immer hashen muss immer 32 zeichen lang sein
-        final String password = AppUtils.md5(this.textFieldPassword.getText().toString());
+        final String password = AppUtils.md5(this.textFieldPassword.getText().toString()); // pw hashen
         Runnable networkTask = new Runnable() {
             public void run() {
                 currentRequestId = NetworkConnection.sendSignUpRequest(DebugOptionsActivity.this, username, email, password);
@@ -222,13 +276,12 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         title += "\nusername: "+username+",";
         title += "\nemail: "+email+",";
         title += "\npasswort: "+password+"";
-        this.showSendRequestPrompt(title, networkTask);
+        AppUtils.showAskIfContinueAlert(this, title, networkTask);
     }
 
     private void onSendLoginRequestPressed() {
         final String username = this.textFieldUsername.getText().toString();
-        // passwort immer hashen, muss 32 zeichen lang sein
-        final String password = AppUtils.md5(this.textFieldPassword.getText().toString());
+        final String password = AppUtils.md5(this.textFieldPassword.getText().toString()); // pw hashen
         Runnable networkTask = new Runnable() {
             public void run() {
                 currentRequestId = NetworkConnection.sendLoginRequest(DebugOptionsActivity.this, username, password);
@@ -239,7 +292,7 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         String title = "Login durchführen?";
         title += "\nusername: "+username+",";
         title += "\npasswort: "+password+"";
-        this.showSendRequestPrompt(title, networkTask);
+        AppUtils.showAskIfContinueAlert(this, title, networkTask);
     }
 
     private void onSendLoadMyHighscoresRequestPressed() {
@@ -253,7 +306,7 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         };
         String title = "Eigene Scores laden?";
         title += "\ntoken: "+token;
-        this.showSendRequestPrompt(title, networkTask);
+        AppUtils.showAskIfContinueAlert(this, title, networkTask);
     }
 
     private void onSendLoadAllHighscoresRequest() {
@@ -265,7 +318,7 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
             }
         };
         String title = "Top-Scores laden?";
-        this.showSendRequestPrompt(title, networkTask);
+        AppUtils.showAskIfContinueAlert(this, title, networkTask);
     }
 
     // Lock Buttons
@@ -276,24 +329,6 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         this.findViewById(R.id.debug_button_send_login_request).setEnabled(!locked);
         this.findViewById(R.id.debug_button_send_my_highscores_request).setEnabled(!locked);
         this.findViewById(R.id.debug_button_send_top_highscores_request).setEnabled(!locked);
-    }
-
-
-    // MARK: - Netzwerk senden Alert
-
-    private void showSendRequestPrompt(final String message, final Runnable onContinue) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage(message);
-        alertDialogBuilder.setPositiveButton("yes",
-                new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface arg0, int arg1) {
-                        onContinue.run();
-                    }
-                }
-        );
-        alertDialogBuilder.setNegativeButton("No", null);
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
     }
 
 
@@ -314,8 +349,8 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
     }
 
     @Override
-    public void didRecieveNetworkError(int requestId, NetworkErrorType errorType) {
-        String result = "Network error: " + errorType.toString();
+    public void didRecieveNetworkError(int requestId, NetworkError error) {
+        String result = "Network error: " + error.toString();
         System.out.println(result);
         Toast.makeText(this, result, Toast.LENGTH_LONG).show();
         this.setNetworkButtonsLocked(false);

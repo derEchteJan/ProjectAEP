@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_floating_material_dark">
+
+
+    <!-- TITLE -->
+    <TextView
+        android:id="@+id/account_overview_textview_title"
+        android:layout_width="wrap_content"
+        android:layout_height="58dp"
+        android:layout_marginStart="176dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="200dp"
+        android:text="Persönliche Daten"
+        android:textAlignment="center"
+        android:textColor="@color/background_floating_material_light"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    <!-- PERSONAL DATA -->
+
+    <!-- USERNAME -->
+    <TextView
+        android:id="@+id/account_overview_textview_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="300dp"
+        android:text="USERNAME"
+        android:textAlignment="viewStart"
+        android:textColor="@color/background_floating_material_light"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/account_overview_textview_title" />
+
+    <TextView
+        android:id="@+id/account_overview_textview_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:text="EMAIL"
+        android:textAlignment="viewStart"
+        android:textColor="@color/background_floating_material_light"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/account_overview_textview_username" />
+
+    <TextView
+        android:id="@+id/account_overview_textview_token_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:text="Auth-token"
+        android:textAlignment="viewStart"
+        android:textColor="@color/background_floating_material_light"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/account_overview_textview_email" />
+
+    <TextView
+        android:id="@+id/account_overview_textview_token"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:text="TOKEN-VALUE"
+        android:textAlignment="viewStart"
+        android:textColor="@color/abc_search_url_text_normal"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/account_overview_textview_token_title" />
+
+
+    <Button android:id="@+id/account_overview_button_authorize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="12sp"
+        android:text="Zugang aktualisieren"
+        app:layout_constraintTop_toBottomOf="@id/account_overview_textview_token"
+        app:layout_constraintStart_toStartOf="@id/account_overview_textview_token_title" />
+
+    <Button android:id="@+id/account_overview_button_logout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/abc_search_url_text_normal"
+        android:text="Ausloggen"
+        android:textColor="@color/bright_foreground_inverse_material_light"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/account_overview_button_authorize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,58 +4,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_floating_material_dark">
+    android:background="#FF484848">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_highscores_content"
-        android:layout_width="409dp"
-        android:layout_height="729dp"
+
+    <TableLayout android:id="@+id/highscores_tablelayout_maintable"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:background="#FF484848"
         android:layout_marginTop="60dp"
-        android:background="#4B4B4B"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/textView_highscores_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="150dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="150dp"
-        android:layout_marginBottom="20dp"
-        android:text="Highscores"
-        android:textColor="@android:color/white"
-        android:textSize="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView_highscores_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintVertical_bias="0.0">
+    </TableLayout>
 
     <Button
-        android:id="@+id/button_highscores_prev"
+        android:id="@+id/highscores_button_switch_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:text="Prev"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView_highscores_content"
+        android:text="meine"
+        app:layout_constraintBottom_toTopOf="@+id/highscores_tablelayout_maintable"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button_highscores_next"
+        android:id="@+id/highscores_button_switch_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="6dp"
-        android:text="Next"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView_highscores_content"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="0dp"
+        android:text="global"
+        app:layout_constraintBottom_toTopOf="@+id/highscores_tablelayout_maintable"
+        app:layout_constraintStart_toEndOf="@id/highscores_button_switch_left"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/highscores_textview_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="Highscores"
+        android:textColor="@android:color/white"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toTopOf="@id/highscores_tablelayout_maintable"
+        app:layout_constraintStart_toEndOf="@id/highscores_button_switch_right"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/highscores_textview_title_annotation"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="35dp"
+        android:text="[tippe zum aktualisieren]"
+        android:textColor="@color/abc_search_url_text_normal"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toTopOf="@id/highscores_tablelayout_maintable"
+        app:layout_constraintStart_toEndOf="@id/highscores_button_switch_right"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
