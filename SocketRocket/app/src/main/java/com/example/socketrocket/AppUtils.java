@@ -11,7 +11,7 @@ public class AppUtils {
 
     // MARK: Debug Mode
 
-    public static final boolean DEBUG_MODE = true;
+    public static final boolean DEBUG_MODE = false;
 
 
     // MARK: UI
