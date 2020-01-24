@@ -196,8 +196,8 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
                 User dummy = new User();
                 dummy.name = "debug_user";
                 dummy.email = "debug@user.net";
-                dummy.password = "";
-                dummy.token = "";
+                dummy.password = AppUtils.md5("passwort");
+                dummy.token = AppUtils.md5("12345");
                 dbHandle.deleteAllUsers();
                 dbHandle.addUser(dummy);
                 Toast.makeText(DebugOptionsActivity.this, "User erstellt", Toast.LENGTH_LONG).show();

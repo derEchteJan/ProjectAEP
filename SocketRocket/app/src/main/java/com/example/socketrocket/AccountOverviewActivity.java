@@ -1,6 +1,7 @@
 package com.example.socketrocket;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.socketrocket.appengine.database.DatabaseConnection;
 import com.example.socketrocket.appengine.database.reflect.objects.User;
+import com.example.socketrocket.appengine.networking.NetworkConnection;
 
 public class AccountOverviewActivity extends Activity implements View.OnClickListener {
 
@@ -17,6 +19,7 @@ public class AccountOverviewActivity extends Activity implements View.OnClickLis
     private Button logoutButton, authoriszeButton;
     private DatabaseConnection dbHandle;
     private User currentUser;
+    private boolean tokenShown = false;
 
 
     // MARK: - Life Cycle
@@ -29,7 +32,7 @@ public class AccountOverviewActivity extends Activity implements View.OnClickLis
         this.dbHandle = new DatabaseConnection(this);
         this.initViews();
         this.loadCurrentUser();
-        updateViews();
+        this.updateViews();
     }
 
     @Override
@@ -47,6 +50,8 @@ public class AccountOverviewActivity extends Activity implements View.OnClickLis
         this.authoriszeButton = this.findViewById(R.id.account_overview_button_authorize);
         this.logoutButton.setOnClickListener(this);
         this.authoriszeButton.setOnClickListener(this);
+        this.tokenLabel.setOnClickListener(this);
+        this.tokenLabel.setClickable(true);
     }
 
     private void updateViews() {
@@ -56,7 +61,7 @@ public class AccountOverviewActivity extends Activity implements View.OnClickLis
         }
         this.usernameLabel.setText(this.currentUser.name);
         this.emailLabel.setText(this.currentUser.email);
-        this.tokenLabel.setText(this.currentUser.token);
+        this.tokenLabel.setText(this.tokenShown ? this.currentUser.token : "anzeigen");
     }
 
 
@@ -79,6 +84,33 @@ public class AccountOverviewActivity extends Activity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        if(v == this.authoriszeButton) {
+            this.onAuthorizeButtonPressed();
+        } else if (v == this.tokenLabel) {
+            this.onTokenTitlePressed();
+        } else if (v == this.logoutButton) {
+            this.onLogoutButtonPressed();
+        }
+    }
 
+    private void onAuthorizeButtonPressed() {
+        Toast.makeText(this,"Nicht implementiert", Toast.LENGTH_LONG).show();
+    }
+
+    private void onTokenTitlePressed() {
+        this.tokenShown ^= true;
+        this.updateViews();
+    }
+
+    private void onLogoutButtonPressed() {
+        Runnable logoutTask = new Runnable() {
+            public void run() {
+                dbHandle.deleteAllUsers();
+                Toast.makeText(AccountOverviewActivity.this, "Abgemeldet", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(AccountOverviewActivity.this, MenuActivity.class);
+                startActivity(intent);
+            }
+        };
+        AppUtils.showAskIfContinueAlert(this, "Abmelden?", logoutTask);
     }
 }
