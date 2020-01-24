@@ -82,12 +82,33 @@
                 android:layout_marginHorizontal="40dp"
                 android:text="Settings anzeigen" />
             <Button
-                android:id="@+id/debug_button_populate_db"
+                android:id="@+id/debug_button_create_user_dummy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginHorizontal="40dp"
-                android:text="Dummy Daten speichern" />
+                android:text="Dummy User erstellen" />
+            <Button
+                android:id="@+id/debug_button_delete_users"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Userdaten löschen" />
+            <Button
+                android:id="@+id/debug_button_create_score_dummy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Dummy Scores erstellen" />
+            <Button
+                android:id="@+id/debug_button_delete_scores"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="Scores löschen" />
 
 
             <!-- Network -->

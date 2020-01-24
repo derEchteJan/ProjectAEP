@@ -50,7 +50,10 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         this.findViewById(R.id.debug_button_print_user_data).setOnClickListener(this);
         this.findViewById(R.id.debug_button_print_highscore_data).setOnClickListener(this);
         this.findViewById(R.id.debug_button_print_settings_data).setOnClickListener(this);
-        this.findViewById(R.id.debug_button_populate_db).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_create_user_dummy).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_delete_users).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_create_score_dummy).setOnClickListener(this);
+        this.findViewById(R.id.debug_button_delete_scores).setOnClickListener(this);
         // netzwerk
         this.findViewById(R.id.debug_button_send_test_request).setOnClickListener(this);
         this.findViewById(R.id.debug_button_send_signup_request).setOnClickListener(this);
@@ -80,7 +83,10 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
             case R.id.debug_button_print_user_data: this.onPrintUserDataPressed(); break;
             case R.id.debug_button_print_highscore_data: this.onPrintHighscoreDataPressed(); break;
             case R.id.debug_button_print_settings_data: this.onPrintSettingsDataPressed(); break;
-            case R.id.debug_button_populate_db: this.onPopulateDBPressed(); break;
+            case R.id.debug_button_create_user_dummy: this.onCreateDummyUserPressed(); break;
+            case R.id.debug_button_delete_users: this.onDeleteUserDataPressed(); break;
+            case R.id.debug_button_create_score_dummy: this.onCreateDummyScoresPressed(); break;
+            case R.id.debug_button_delete_scores: this.onDeleteScoreDataPressed(); break;
             // netzwerk
             case R.id.debug_button_send_test_request: this.onSendTestRequestPressed(); break;
             case R.id.debug_button_send_signup_request: this.onSendSignupRequestPressed(); break;
@@ -184,8 +190,61 @@ public class DebugOptionsActivity extends Activity implements View.OnClickListen
         AppUtils.showAskIfContinueAlert(this, "Print all Setting Objects?", databaseTask);
     }
 
-    private void onPopulateDBPressed() {
-        // TODO: Datenbank besiedeln
+    private void onCreateDummyUserPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                User dummy = new User();
+                dummy.name = "debug_user";
+                dummy.email = "debug@user.net";
+                dummy.password = "";
+                dummy.token = "";
+                dbHandle.deleteAllUsers();
+                dbHandle.addUser(dummy);
+                Toast.makeText(DebugOptionsActivity.this, "User erstellt", Toast.LENGTH_LONG).show();
+            }
+        };
+        AppUtils.showAskIfContinueAlert(this, "Dummy-User \"debug_user\" erstellen? Bestehender User wird überschrieben.", databaseTask);
+    }
+
+    private void onDeleteUserDataPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                dbHandle.deleteAllUsers();
+                Toast.makeText(DebugOptionsActivity.this, "success", Toast.LENGTH_LONG).show();
+            }
+        };
+        AppUtils.showAskIfContinueAlert(this, "Alle User löschen?", databaseTask);
+    }
+
+    private void onCreateDummyScoresPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                dbHandle.deleteAllScores();
+                int count = (int)(Math.random() * 5) + 5;
+                long msPerHour = 1000 * 60 * 60;
+                int maxHoursAgo = 1000;
+                for (int i = 0; i < count; i++) {
+                    Score dummy = new Score();
+                    long current = System.currentTimeMillis();
+                    long randomDelta = (long) (Math.random() * maxHoursAgo) * msPerHour;
+                    dummy.timestamp = current - randomDelta;
+                    dummy.amount = (long) (Math.random() * 1000) + 100;
+                    dbHandle.addScore(dummy);
+                }
+                Toast.makeText(DebugOptionsActivity.this, "Scores erstellt", Toast.LENGTH_LONG).show();
+            }
+        };
+        AppUtils.showAskIfContinueAlert(this, "Lokale Dummy-Scores generieren?", databaseTask);
+    }
+
+    private void onDeleteScoreDataPressed() {
+        Runnable databaseTask = new Runnable() {
+            public void run() {
+                dbHandle.deleteAllScores();
+                Toast.makeText(DebugOptionsActivity.this, "Scores gelöscht", Toast.LENGTH_LONG).show();
+            }
+        };
+        AppUtils.showAskIfContinueAlert(this, "Alle lokalen Scores löschen?", databaseTask);
     }
 
 
