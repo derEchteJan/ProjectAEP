@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="EMAIL"
         android:textAlignment="viewStart"
         android:textColor="@color/background_floating_material_light"
@@ -63,12 +63,12 @@
         app:layout_constraintTop_toBottomOf="@id/account_overview_textview_username" />
 
     <TextView
-        android:id="@+id/account_overview_textview_token"
+        android:id="@+id/account_overview_textview_token_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:text="TOKEN"
+        android:layout_marginTop="10dp"
+        android:text="Auth-token"
         android:textAlignment="viewStart"
         android:textColor="@color/background_floating_material_light"
         android:textSize="18sp"
@@ -78,24 +78,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/account_overview_textview_email" />
 
-
-    <Button android:id="@+id/account_overview_button_logout"
+    <TextView
+        android:id="@+id/account_overview_textview_token"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:gravity="center_horizontal"
-        android:text="Ausloggen"
-        app:layout_constraintTop_toBottomOf="@id/account_overview_textview_token"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:text="TOKEN-VALUE"
+        android:textAlignment="viewStart"
+        android:textColor="@color/abc_search_url_text_normal"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/account_overview_textview_token_title" />
+
 
     <Button android:id="@+id/account_overview_button_authorize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:gravity="center_horizontal"
-        android:text="Neuen Token\nanfordern"
-        app:layout_constraintTop_toBottomOf="@id/account_overview_button_logout"
+        android:layout_marginTop="10dp"
+        android:textSize="12sp"
+        android:text="Zugang aktualisieren"
+        app:layout_constraintTop_toBottomOf="@id/account_overview_textview_token"
+        app:layout_constraintStart_toStartOf="@id/account_overview_textview_token_title" />
+
+    <Button android:id="@+id/account_overview_button_logout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/abc_search_url_text_normal"
+        android:text="Ausloggen"
+        android:textColor="@color/bright_foreground_inverse_material_light"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/account_overview_button_authorize"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
