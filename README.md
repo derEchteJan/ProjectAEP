@@ -1,12 +1,10 @@
-# ProjectAEP
-* Git Tutorial:
-  
-* https://git-scm.com/book/en/v1/Getting-Started-Git-Basics
-> 
-Aufgabe: Entwicklung einer Android App
+# ProjectAEP/ITS
+
+> Aufgabe: Entwicklung einer Android App + Backend Server auf Linux
 
 ## Dokumentation
-AEP Java (Android App) [siehe hier](/SocketRocket/documentation)
+AEP Java (Android App) 
+[siehe hier](/SocketRocket/documentation)
 
 ITS Linux (Raspberry-Pi Server)
 [siehe hier](/Apache/documentation)
@@ -19,21 +17,23 @@ ITS Linux (Raspberry-Pi Server)
 
 (2 Wochen + 2 Wochen)
 
+Android:
+
 * Setup
   
   * Android Studio
   
-  * Testgerät
+  * TestgerŠt
   
   * git
   
-  * GitHub Accounts
+  * GitHub Accounts & Repo
 
 * Tech Demo
   
-  * Singe Screen App
+  * Singe Screen App (HauptmenŸ + SpieloberflŠche)
   
-  * Spielfeld mit Spieler, basic movement, Kameraführung
+  * Spiellogik, Gameloop, Schnittstelle zur Grafikausgabe auf Android, Hud
   
 
 
@@ -41,40 +41,62 @@ ITS Linux (Raspberry-Pi Server)
 
 (2 Wochen + 3 Wochen)
 
-* Spielmechaniken einbauen
+Android:
 
-* Spielregeln einbauen
+* Spielengine ausbauen 
 
-
-
-* Menüs
+  * Spielelement-Objekte: EntityHandler, Entity, Player, Hud-Elemente
   
-  * Hauptmenü mit Level Auswahl
+  * Touch-Input Handling
+  
+* App Engine erstellen
+    
+    * Netzwerkschnittstelle
+    
+    * Sqlite Schnittstelle und reflection
+  
+* App-MenŸs ausbauen
 
-* Levels
+  * HauptmenŸ
+  
+  * Spielen
+  
+  * Login
+  
+  * Registrierung
+  
+  * Userdaten
+  
+  * Highscores
 
-* Mehr Spielobjekte für die Levels
+* Levels, Hindernisse und Gegner (Wurden nicht fertiggestellt aus ZeitgrŸnden)
 
+* Dokumentation des Projektes
 
+* Abgabe
 
-* Buttons zum Reset und Pausieren
+Linux
+ 
+* OS aufsetzen: Raspbian
 
+* Apache installieren
 
+* PHP installieren
 
-* Protokoll und Sequenzen entwickeln
+* MySQL installieren
 
-* Clientseitige Implementierung
+* PHP REST Schnittstelle entwickeln
 
-* Serverseitige Implementierung
+* SQL fŸr Datenbank-struktur entwickeln
 
+* (Wenn Zeit ausreicht: Web-Interface entwickeln)
 
-
-* App Testung & Fertigstellung
-
-* Präsentation erstellen und fertigstellen
+* Dokumentation des Projektes
 
 
 
 #### Block 5
+
+* Abgabe Linux Projekt
 
 * PrŠsentation der Projekte
