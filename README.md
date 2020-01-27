@@ -77,4 +77,4 @@ ITS Linux (Raspberry-Pi Server)
 
 #### Block 5
 
-* Vorstellung der App
+* Präsentation der Projekte
