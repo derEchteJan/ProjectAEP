@@ -6,10 +6,10 @@
 Aufgabe: Entwicklung einer Android App
 
 ## Dokumentation
-AEP Java (Android App) [siehe hier](https://github.com/derEchteJan/ProjectAEP/tree/master/SocketRocket/documentation)
+AEP Java (Android App) [siehe hier](/SocketRocket/documentation)
 
 ITS Linux (Raspberry-Pi Server)
-[siehe hier](/tree/master/Apache/documentation)
+[siehe hier](/Apache/documentation)
 
 
 ## Roadmap
