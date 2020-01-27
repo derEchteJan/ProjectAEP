@@ -3,6 +3,7 @@
 > Aufgabe: Entwicklung einer Android App + Backend Server auf Linux
 
 > AEP: Das Android Projekt für Android Studio befindet sich im Ordner '/SocketRocket'
+
 > ITS: Die Linux Befehle und Konfigurationsdateien für den Raspberry-Pi befinden sich im Ordner '/Apache'
 
 ## Dokumentation
