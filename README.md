@@ -1,9 +1,12 @@
-# ProjectAEP/ITS
+# Berufsschul-Projekt AEP/ITS
 
 > Aufgabe: Entwicklung einer Android App + Backend Server auf Linux
 
+> AEP: Das Android Projekt f√ºr Android Studio befindet sich im Ordner '/SocketRocket'
+> ITS: Die Linux Befehle und Konfigurationsdateien f√ºr den Raspberry-Pi befinden sich im Ordner '/Apache'
+
 ## Dokumentation
-AEP Java (Android App) 
+AEP Java (Android App)
 [siehe hier](/SocketRocket/documentation)
 
 ITS Linux (Raspberry-Pi Server)
@@ -13,28 +16,28 @@ ITS Linux (Raspberry-Pi Server)
 ## Roadmap
 
 
-#### Block 1 & 2 
+#### Block 1 & 2
 
 (2 Wochen + 2 Wochen)
 
 Android:
 
 * Setup
-  
+
   * Android Studio
-  
-  * Testgerät
-  
+
+  * Testger√§t
+
   * git
-  
+
   * GitHub Accounts & Repo
 
 * Tech Demo
-  
-  * Singe Screen App (Hauptmenü + Spieloberfläche)
-  
+
+  * Singe Screen App (Hauptmen√º + Spieloberfl√§che)
+
   * Spiellogik, Gameloop, Schnittstelle zur Grafikausgabe auf Android, Hud
-  
+
 
 
 #### Block 3 & 4
@@ -43,41 +46,47 @@ Android:
 
 Android:
 
-* Spielengine ausbauen 
+* Spielengine ausbauen
 
   * Spielelement-Objekte: EntityHandler, Entity, Player, Hud-Elemente
-  
-  * Touch-Input Handling
-  
-* App Engine erstellen
-    
-    * Netzwerkschnittstelle
-    
-    * Sqlite Schnittstelle und reflection
-  
-* App-Menüs ausbauen
 
-  * Hauptmenü
-  
+  * Touch-Input Handling
+
+* App Engine erstellen
+
+    * Netzwerkschnittstelle
+
+    * Sqlite Schnittstelle und reflection
+
+* App-Men√ºs ausbauen
+
+  * Hauptmen√º
+
   * Spielen
-  
+
   * Login
-  
+
   * Registrierung
-  
+
   * Userdaten
-  
+
   * Highscores
 
-* Levels, Hindernisse und Gegner (Wurden nicht fertiggestellt aus Zeitgründen)
+* Levels, Hindernisse und Gegner (Wurden nicht fertiggestellt aus Zeitgr√ºnden)
+
+* Finale 'Testung'
 
 * Dokumentation des Projektes
 
 * Abgabe
 
 Linux
- 
+
+* Unterricht: Raspberry-Pi Basics & Aufsetzen von Raspbian
+
 * OS aufsetzen: Raspbian
+
+* SSH und Netzwerk einrichten
 
 * Apache installieren
 
@@ -87,7 +96,7 @@ Linux
 
 * PHP REST Schnittstelle entwickeln
 
-* SQL für Datenbank-struktur entwickeln
+* SQL f√ºr Datenbank-Struktur entwickeln
 
 * (Wenn Zeit ausreicht: Web-Interface entwickeln)
 
@@ -99,4 +108,4 @@ Linux
 
 * Abgabe Linux Projekt
 
-* Präsentation der Projekte
+* Pr√§sentation des Android Projekt
