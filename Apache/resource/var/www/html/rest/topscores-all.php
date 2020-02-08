@@ -94,6 +94,7 @@ $db_conn->close();
 
 // respond with complete user
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
 echo json_encode($result_arr);
 
 exit(0);
