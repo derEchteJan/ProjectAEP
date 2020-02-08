@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Highscores</title>
+	<link rel="shortcut icon" type="image/png" href="favicon.png"/>
+	<link rel="stylesheet" href="scores.css">
+</head>
+<body onload="loadScores()">
+	
+	<!-- Script for loading and displaying table data --> 
+	<script src="scores.js"></script>
+
+	<!-- Content --> 
+	<h2>Highscores</h2>
+	<button type="button" id="refresh_button" onclick="loadScores()">Aktualisieren</button>
+	<table id="scores_table">
+	  <tr>
+		<th>Name</th>
+		<th>Score</th>
+		<th>Date</th>
+	  </tr>
+	</table>
+	
+	<p> <<< <a href="/index.html">Hier</a> geht's zurück zur Startseite</p>
+	
+	<p id="debug_container" style="display:none;"></p>
+
+</body>
+</html>
