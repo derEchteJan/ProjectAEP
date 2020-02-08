@@ -3,10 +3,11 @@
 // MARK: - button action
 
 function loadScores() {
+	lockButton();
 	var debugContainer = document.getElementById("debug_container");   // invisible debug html elemet to write debug output in
 	// setup request object
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', "/rest/topscores-all.php", true);
+	xhr.open('GET', "http://janspi/rest/topscores-all.php", true);
 	xhr.onreadystatechange = processRequest;
 	// set response handling
 	function processRequest(e) {
@@ -17,10 +18,10 @@ function loadScores() {
 			unlockButton();
 		} else {					// error handling
 			debugContainer.innerHTML = "Error: Status: "+(xhr.status).toString();
+			unlockButton();
 		}
 	}
 	// send it
-	lockButton();
 	xhr.send();
 }
 
