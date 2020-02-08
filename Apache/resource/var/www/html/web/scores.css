@@ -1,22 +1,21 @@
 body {
-	background-color: #A0A0A0;
+	background-color: #101010;
 	font-family: verdana;
+	color: #f0f0f0;
 }
-
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
 td, th {
-  border: 1px solid #dddddd;
+  border: 1px solid #404040;
   text-align: left;
   padding: 8px;
 }
 tr:nth-child(odd) {
-  background-color: #dddddd;
+  background-color: #202020;
 }
-
 h1, h2, h3 {
 	color: white;
 	text-align: center;

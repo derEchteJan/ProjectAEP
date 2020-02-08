@@ -1,4 +1,7 @@
-﻿
+﻿/*
+ * scores.js
+ * loads the highscores from the rest and displays them in the table of scores.html
+ */
 
 // MARK: - button action
 
@@ -13,16 +16,39 @@ function loadScores() {
 	function processRequest(e) {
 		if (xhr.readyState == 4) {	// state 4 = ready -> time to partay!!!
 			debugContainer.innerHTML = "Response-Code: "+(xhr.status).toString() + "</br>contents:</br>" + xhr.responseText;
-			var responseObject = JSON.parse(xhr.responseText);
-			displayScores(responseObject);
+			if (xhr.responseText.length == 0) {
+				addNoResponseIndicator();
+			} else {
+				try {
+					var responseObject = JSON.parse(xhr.responseText);
+					displayScores(responseObject);
+				} catch (exception) {
+					debugContainer.innerHTML = "Error: " + exception;
+					addErrorIndicator(exception);
+				}
+			}
 			unlockButton();
-		} else {					// error handling
+		} else {
 			debugContainer.innerHTML = "Error: Status: "+(xhr.status).toString();
 			unlockButton();
 		}
 	}
 	// send it
 	xhr.send();
+}
+
+// MARK: error handling
+
+function addNoResponseIndicator() {
+	let container = document.getElementById("error_indicator_container");
+	container.setAttribute("style", "");
+	container.innerHTML = "Der Server hat nicht geantwortet";
+}
+
+function addErrorIndicator(error) {
+	let container = document.getElementById("error_indicator_container");
+	container.setAttribute("style", "color:red");
+	container.innerHTML = "Es ist ein JavaScript Fehler aufgetreten:\n"+error;
 }
 
 
