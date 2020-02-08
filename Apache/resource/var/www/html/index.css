@@ -1,0 +1,17 @@
+body {
+	background-color: #101010;
+	font-family: verdana;
+	color: #f0f0f0;
+}
+
+h1, h2, h3 {
+	color: #e24d81;
+}
+
+a {
+	color: #6bd9f4;
+}
+
+.api_route_link {
+	text-decoration: none;
+}
