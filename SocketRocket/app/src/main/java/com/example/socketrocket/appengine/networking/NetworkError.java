@@ -6,7 +6,7 @@ public class NetworkError {
     public final int statusCode;
     public final String message;
 
-    enum Type {
+    public enum Type {
         notReachable, connectionClosed, httpStatus, badResponse;
     }
 

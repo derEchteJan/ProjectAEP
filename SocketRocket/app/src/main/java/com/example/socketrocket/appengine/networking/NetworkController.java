@@ -2,8 +2,6 @@ package com.example.socketrocket.appengine.networking;
 
 import android.app.Activity;
 
-import com.example.socketrocket.appengine.BackgroundTaskHandler;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,11 +17,12 @@ import java.net.URL;
 
 public class NetworkController {
 
-    //private static final String BASE_URL = "http://76313ec7-f618-40af-bdc1-c85c58cf4bff.mock.pstmn.io"; // mockup server
-    private static final String BASE_URL = "http://172.20.10.10"; // raspberry pi via ip
-    private static String tokenKey = "token";
-    private static String contentTypeKey = "Content-Type";
-    private static String contentTypeValue = "Application/json";
+    //private static final String BASE_URL = "http://76313ec7-f618-40af-bdc1-c85c58cf4bff.mock.pstmn.io"; // postman mock server umgebung
+    private static final String BASE_URL = "http://172.20.10.10"; // raspberry pi 'janspi' via ip (hostnamen gehen leider noch nicht)
+    private static final  String TOKEN_KEY = "token";
+    private static final String CONTENT_TYPE_KEY = "Content-Type";
+    private static final String CONTENT_TYPE_VALUE = "Application/json";
+    private static final boolean SIMULATE_SLOW_NETWORK = true;
 
     private static int requestIdCounter = 0;
 
@@ -86,16 +85,15 @@ public class NetworkController {
 
     private void startRequestTaskThread(final NetworkRequestDelegate caller, final int requestId, final URL url, final String httpMethod, final String[][] headers, final String payload) {
         new Thread(new Runnable() { public void run(){
-            // Debug delay
-            //try{Thread.sleep(1000);}catch(InterruptedException e){}
-            //
-            HttpURLConnection connection = null;
+            // Test Verzögerung um langsames Laden im Netzwerk zu simuliren
+            if(SIMULATE_SLOW_NETWORK) try{Thread.sleep(1500);}catch(InterruptedException e){e.printStackTrace();}
+            HttpURLConnection connection;
             int statusCode;
             try {
                 // open connection
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod(httpMethod);
-                connection.setRequestProperty(contentTypeKey, contentTypeValue);
+                connection.setRequestProperty(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
                 // set headers
                 for (String[] header: headers) connection.setRequestProperty(header[0], header[1]);
                 connection.setUseCaches(false);
@@ -156,7 +154,7 @@ public class NetworkController {
             }
             if(token != null) {
                 cleanedHeaders[entryCount] = new String[2];
-                cleanedHeaders[entryCount][0] = tokenKey;
+                cleanedHeaders[entryCount][0] = TOKEN_KEY;
                 cleanedHeaders[entryCount][1] = token;
             }
             return cleanedHeaders;

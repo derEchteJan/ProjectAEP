@@ -2,6 +2,7 @@ package com.example.socketrocket;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -57,6 +58,8 @@ public class MenuActivity extends AppCompatActivity implements NetworkRequestDel
         this.playButton.setOnClickListener(this);
         this.accountButton.setOnClickListener(this);
         this.highscoresButton.setOnClickListener(this);
+        this.accountButton.setSingleLine();
+        this.accountButton.setEllipsize(TextUtils.TruncateAt.END);
     }
 
     private void updateViews() {

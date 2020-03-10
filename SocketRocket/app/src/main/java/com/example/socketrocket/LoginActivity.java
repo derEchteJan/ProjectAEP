@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -139,10 +138,19 @@ public class LoginActivity extends Activity implements NetworkRequestDelegate, V
     public void didRecieveNetworkError(int requestId, NetworkError error) {
         if(requestId == this.currentRequestId) {
             this.currentRequestId = NetworkRequestDelegate.INVALID_REQUEST_ID;
+            this.setNetworkButtonsLocked(false);
             if(AppUtils.DEBUG_MODE) {
-                System.out.println("Network Error:\n"+error.toString());
+                System.out.println("Login Error: "+error.toString());
             }
-            Toast.makeText(this,  "Netzwerkfehler", Toast.LENGTH_LONG).show();
+            if(error.type == NetworkError.Type.httpStatus && error.statusCode == 403) {
+                // 403 -> credentials invalid
+                Toast.makeText(this, "Zugangsdaten ungültig", Toast.LENGTH_LONG).show();
+                this.usernameInputField.getText().clear();
+                this.passwordInputField.getText().clear();
+            } else {
+                // else -> some kind of error then
+                Toast.makeText(this, "Netzwerkfehler", Toast.LENGTH_LONG).show();
+            }
         } else {
             return;
         }
